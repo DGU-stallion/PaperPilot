@@ -9,6 +9,7 @@ import json
 import os
 import platform
 import shutil
+import subprocess
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
@@ -34,6 +35,68 @@ def _capability(available: bool, required: bool, message: str, **details: Any) -
         "message": message,
         **details,
     }
+
+
+def _check_update() -> dict[str, Any]:
+    """Check if local repo is behind remote. Returns update status info."""
+    git_dir = ROOT / ".git"
+    if not git_dir.is_dir():
+        return {"available": False, "reason": "not_a_git_repo"}
+
+    try:
+        # Fetch latest remote info without changing working tree
+        subprocess.run(
+            ["git", "fetch", "--quiet"],
+            cwd=ROOT,
+            capture_output=True,
+            timeout=10,
+        )
+
+        # Get local and remote HEAD commit hashes
+        local = subprocess.run(
+            ["git", "rev-parse", "HEAD"],
+            cwd=ROOT,
+            capture_output=True,
+            text=True,
+            timeout=5,
+        )
+        remote = subprocess.run(
+            ["git", "rev-parse", "@{u}"],
+            cwd=ROOT,
+            capture_output=True,
+            text=True,
+            timeout=5,
+        )
+
+        if local.returncode != 0 or remote.returncode != 0:
+            return {"available": False, "reason": "no_upstream_tracking"}
+
+        local_hash = local.stdout.strip()
+        remote_hash = remote.stdout.strip()
+
+        if local_hash == remote_hash:
+            return {"available": True, "up_to_date": True, "local": local_hash[:8]}
+
+        # Count how many commits behind
+        behind = subprocess.run(
+            ["git", "rev-list", "--count", f"{local_hash}..{remote_hash}"],
+            cwd=ROOT,
+            capture_output=True,
+            text=True,
+            timeout=5,
+        )
+        behind_count = int(behind.stdout.strip()) if behind.returncode == 0 else 0
+
+        return {
+            "available": True,
+            "up_to_date": False,
+            "local": local_hash[:8],
+            "remote": remote_hash[:8],
+            "behind": behind_count,
+        }
+
+    except (subprocess.TimeoutExpired, FileNotFoundError, OSError):
+        return {"available": False, "reason": "git_command_failed"}
 
 
 def build_report(profile: str) -> dict[str, Any]:
@@ -104,6 +167,32 @@ def build_report(profile: str) -> dict[str, Any]:
         ),
     }
 
+    # Version / update check
+    update_info = _check_update()
+    if update_info.get("available"):
+        if update_info.get("up_to_date"):
+            capabilities["update"] = _capability(
+                True,
+                False,
+                f"已是最新版本 ({update_info['local']})",
+            )
+        else:
+            behind = update_info.get("behind", 0)
+            capabilities["update"] = _capability(
+                True,
+                False,
+                f"有新版本可用（落后 {behind} 个提交）",
+                local=update_info["local"],
+                remote=update_info["remote"],
+                behind=behind,
+            )
+    else:
+        capabilities["update"] = _capability(
+            False,
+            False,
+            "无法检查更新" + (f"（{update_info.get('reason', '')}）" if update_info.get("reason") else ""),
+        )
+
     recommendations: list[str] = []
     if not analysis_available and analysis_required:
         recommendations.append("在隔离虚拟环境中安装 install/requirements-standard.txt")
@@ -113,6 +202,11 @@ def build_report(profile: str) -> dict[str, Any]:
         recommendations.append("确认宿主 Agent 是否提供 Web 搜索；需要 Tavily 时再配置 API Key")
     if not latex_available:
         recommendations.append("使用 Overleaf，或经用户确认后安装 TeX Live 与 biber")
+    if update_info.get("available") and not update_info.get("up_to_date"):
+        behind = update_info.get("behind", 0)
+        recommendations.append(
+            f"PaperPilot 有新版本（落后 {behind} 个提交），运行 git pull 更新 skills 和 pipeline"
+        )
 
     required_ready = all(
         item["available"] and (item.get("supported", True))

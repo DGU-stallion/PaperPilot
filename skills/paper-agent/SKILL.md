@@ -138,16 +138,15 @@ agent 在任何阶段需要搜索信息时，遵循以下原则：
 ### 能力检测（启动时执行）
 
 ```
+检测 web-access skill  → skills/web-access/SKILL.md 存在：联网能力满配
+                        → 不存在：使用 agent 平台内置搜索（能力受限）
+
 检测 paper-search-mcp → 可用：学术搜索满配
-                       → 不可用：告知用户"学术文献搜索能力受限，
-                         建议安装 paper-search-mcp 提升精度"，
-                         同时用 web-access 作为替代路径
+                       → 不可用：web-access 降级路径（WebSearch 学术平台）
 
-检测 web-access       → 可用：信息侦察满配
-                       → 不可用：使用 agent 平台内置 web search/fetch
-
-两者都不可用           → 明确告知用户搜索能力严重受限，
-                         建议手动提供文献列表和数据源信息
+检测 CDP 可用性       → node skills/web-access/scripts/check-deps.mjs
+                       → exit 0：完整能力（含浏览器自动化）
+                       → exit 1：层级 1-2（足够大部分任务）
 ```
 
 ### 搜索结果的判断模式
@@ -187,6 +186,19 @@ agent 搜索后必须主动输出判断，而不只是列结果：
 | 有数据无回归 | empirical-analysis |
 | 有结果无论文 | paper-writer |
 | 有初稿 | integrity-auditor |
+
+### 必须动作（不可跳过）
+
+进入任何下游 skill 之前，agent 必须严格执行以下步骤，**无论用户是否催促**：
+
+1. **读取 SKILL 文件**：执行 `read_file("skills/<skill-name>/SKILL.md")` 完整读取目标 skill 的全部内容
+2. **确认产出规范**：明确该 skill 要求的输出文件列表、文件命名和格式要求
+3. **执行对话策略**：按 SKILL.md 中定义的"进入本阶段时"对话策略开始交互（如询问搜索偏好、确认范围等），不得跳过
+4. **按 Phase 顺序执行**：如 SKILL.md 定义了分阶段流程（Phase 1→2→3...），必须逐阶段推进，不得合并跳跃
+
+**违反此规则的产出视为无效**——即使内容本身有价值，也必须重新对齐 SKILL 规范后才能交付。
+
+**用户催促不构成跳过流程的理由。** 如用户要求"直接开干"，正确响应是："好的，我先快速确认一下流程要求（30秒），然后立即开始。"——而不是跳过 SKILL 加载。
 
 ### 技能完成后的标准输出
 
@@ -256,6 +268,7 @@ papers/<project>/<skill-output-dir>/
 4. 一次一个决策点，不让用户面对选择瘫痪
 5. 搜索后给判断，不只列结果
 6. 用户画像影响所有后续交互的深度和风格
+7. **先报告再执行**：每个阶段涉及工具调用（搜索、下载、文件写入等）前，先报告当前发现/判断，给出选项，等用户确认后再执行。节奏为"判断 → 选项 → 确认 → 执行"。例如：文献搜索完成后先报告"找到 X 篇候选，推荐 Y 篇核心论文"，再问"需要我下载 PDF 吗？只下载核心论文还是全部？"——由用户决定执行范围
 
 ---
 
@@ -263,8 +276,8 @@ papers/<project>/<skill-output-dir>/
 
 | 缺少 | 影响 | 应对 |
 |------|------|------|
-| paper-search-mcp | 学术文献搜索降为通用搜索 | web-access 访问学术平台网页版 |
-| web-access | 信息侦察精度降低 | Agent 平台内置 web search/fetch |
+| paper-search-mcp | 学术文献搜索降为通用搜索 | web-access 通过 WebSearch 访问学术平台网页版 |
+| CDP (Node.js <22) | 无法访问需登录/反爬站点 | 标记为"需用户手动"，提供具体步骤 |
 | 实证依赖 | empirical-analysis 降为引导模式 | 推荐安装或用户手动提供结果 |
 | TeX Live | paper-writer 不编译 PDF | 引导使用 Overleaf |
 

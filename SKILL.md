@@ -10,6 +10,7 @@
 | Skill | Path | Optional |
 |-------|------|----------|
 | paper-agent | `skills/paper-agent/SKILL.md` | No (meta-skill) |
+| web-access | `skills/web-access/SKILL.md` | No (base capability) |
 | topic-explorer | `skills/topic-explorer/SKILL.md` | No |
 | literature-survey | `skills/literature-survey/SKILL.md` | No |
 | data-collector | `skills/data-collector/SKILL.md` | No |

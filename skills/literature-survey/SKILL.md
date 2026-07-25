@@ -1,6 +1,6 @@
 ---
 name: literature-survey
-description: Systematically search, screen, and synthesize academic literature using structured PRISMA-inspired workflow. Produces candidate list, thematic review, BibTeX bibliography, and research gap analysis.
+description: Systematically search, screen, and synthesize academic literature using structured PRISMA-inspired workflow. Produces candidate list, thematic review, verified bibliography, and research gap analysis.
 version: 6.0.0a1
 triggers:
   - "帮我搜文献"
@@ -8,10 +8,8 @@ triggers:
   - "literature review"
   - "找相关论文"
 consumes:
-  - research_question
-  - y_var
-  - d_var
-  - identification
+  - research_topic
+  - keywords
 produces:
   - candidate_papers
   - literature_review_path
@@ -33,15 +31,24 @@ output_dir: literature/
 ### 进入本阶段时
 
 1. 读取 `researcher_profile.json` 了解用户背景
-2. 读取 `topics/00_research_proposal.md` 获取研究问题和变量
-3. 向用户确认搜索范围：
+2. 读取 `topics/` 目录下的研究提案或选题文件，获取研究主题和关键概念
+3. **询问搜索偏好**（一句话）：
 
 ```
-"基于你的研究问题 [一句话复述]，我计划从以下几个维度搜索文献：
-  1. [Y变量] 相关的理论与实证研究
-  2. [D变量] 的测度与效应研究  
-  3. [识别策略] 方法的应用案例
-  4. [Y] 与 [D] 的直接关系研究
+"开始文献调研之前，你有没有特定的搜索偏好？（比如时间范围、中英文比例、期刊层级要求等）如果没有，我按默认配置来：近5年文献占80%+经典不限年份，中文≥30%+英文≥50%，优先推荐A+/A级期刊文献。"
+```
+
+如果用户给出具体偏好，将其记录为搜索策略参数并在后续检索中严格执行。
+
+4. 向用户确认搜索范围：
+
+```
+"基于你的研究主题 [一句话复述]，我计划从以下几个维度搜索文献：
+  1. [核心概念A] 相关的理论与研究
+  2. [核心概念B] 的研究现状
+  3. [概念A] 与 [概念B] 的关系研究
+  4. 相关方法论/分析框架的应用
+  5. 该主题的综述与元分析
 
 搜索范围建议：近 10 年（重点近 5 年），中英文并行。
 你有补充的搜索维度或特殊要求吗？"
@@ -68,7 +75,7 @@ Phase 4: 精读筛选（全文/详细摘要层面）
     ↓
 Phase 5: 主题聚类与综述写作
     ↓
-Phase 6: BibTeX 生成与引用验证
+Phase 6: 引用验证与文献列表生成
     ↓
 Phase 7: 研究空白总结
 ```
@@ -77,31 +84,35 @@ Phase 7: 研究空白总结
 
 **必须中英文双线并行搜索。**
 
-关键词构造模板：
+关键词构造方法：
+
+1. 从研究主题中提取核心概念（通常 2-4 个）
+2. 为每个核心概念列出 2-3 个同义词/近义词
+3. 组合构造搜索维度
 
 ```
-维度 1: 核心关系（Y + D）
-  中文: "{D变量} + {Y变量} + 影响/效应/作用"
-  英文: "{D} + {Y} + effect / impact / influence"
+维度 1: 核心概念关系
+  中文: "{概念A} + {概念B} + 影响/关系/作用/机制"
+  英文: "{concept A} + {concept B} + effect / relationship / mechanism"
 
-维度 2: 因变量理论
-  中文: "{Y变量} + 影响因素 / 决定因素 / 驱动因素"
-  英文: "{Y} + determinants / drivers / factors"
+维度 2: 概念A的研究现状
+  中文: "{概念A} + 研究进展 / 理论框架 / 测度"
+  英文: "{concept A} + research / framework / measurement"
 
-维度 3: 自变量效应
-  中文: "{D变量} + 经济效应 / 社会影响"
-  英文: "{D} + economic effects / consequences"
+维度 3: 概念B的研究现状
+  中文: "{概念B} + 影响因素 / 决定因素 / 驱动因素"
+  英文: "{concept B} + determinants / drivers / factors"
 
-维度 4: 方法应用
-  中文: "{识别策略} + {领域} + 实证"
-  英文: "{method} + {field} + empirical / causal"
+维度 4: 方法论/分析框架
+  中文: "{相关方法} + {领域} + 应用/案例"
+  英文: "{method} + {field} + application / case study"
 
 维度 5: 综述/元分析
   中文: "{主题} + 研究综述 / 文献述评"
   英文: "{topic} + systematic review / meta-analysis / survey"
 ```
 
-同义词扩展（每个核心概念列 2-3 个同义词）：
+同义词扩展示例：
 ```
 例: "数字经济" → "数字化" / "互联网经济" / "数字化转型"
     "digital economy" → "digitalization" / "digital transformation" / "ICT"
@@ -109,30 +120,30 @@ Phase 7: 研究空白总结
 
 ### Phase 2: 多源检索
 
-**搜索工具优先级：paper-search-mcp > web-access 访问学术平台 > agent 内置搜索**
+**委托 web-access skill 执行联网操作。** 本 skill 声明搜索意图，web-access 负责通道选择。
 
-#### 使用 paper-search-mcp（首选）
+#### web-access 搜索策略（文献调研）
+
+**搜索意图**: 学术文献检索 + 引用追踪 + PDF 获取
+**成功标准**: 各维度获得充分候选论文，核心论文有 PDF 下载
+**优先源**: paper-search-mcp（首选） > WebSearch 访问学术平台（降级）
+**输出要求**: 论文元数据（标题/作者/年份/DOI）+ PDF 下载到 `literature/`
+**失败降级**: paper-search-mcp 不可用 → WebSearch "site:scholar.google.com" + WebFetch 提取元数据
+
+#### 搜索执行策略
 
 ```
-搜索策略:
-1. search_papers(query="...", limit=20, year="2019-")  — 每个维度搜一次
-2. 对高相关论文: get_paper_citations() — 正向引用追踪
-3. 对高相关论文: get_paper_references() — 反向参考追踪（"滚雪球"）
-4. get_paper_recommendations() — 发现相似论文
-5. 对关键作者: get_author_papers() — 追踪核心作者的其他成果
+1. paper-search-mcp: search_papers(query="...", sources="all") — 每个维度搜一次
+2. 引用追踪: 对高相关论文查看 references/citations（滚雪球）
+3. 作者追踪: 对关键作者搜索其他成果
+4. 交叉验证: 使用不同数据源确认论文真实性
+5. PDF获取: 对核心论文通过 paper-search-mcp download 或 curl 下载 PDF
 ```
-
-#### Fallback: web-access 访问学术平台
-
-如果 paper-search-mcp 不可用：
-- WebSearch 搜索 "site:scholar.google.com {keywords}"
-- WebFetch / CDP 访问 Semantic Scholar、Google Scholar 网页版
-- 提取论文元数据（标题、作者、年份、摘要）
 
 #### 搜索轮次
 
 ```
-第 1 轮（广度）: 5 个维度各搜 1 次，收集候选
+第 1 轮（广度）: 各维度各搜 1 次，收集候选
 第 2 轮（深度）: 对第 1 轮高相关论文做引用追踪
 第 3 轮（补充）: 针对第 1-2 轮暴露的知识缺口补充搜索
 
@@ -145,71 +156,127 @@ Phase 7: 研究空白总结
 
 | 标准 | 纳入 | 排除 |
 |------|------|------|
-| 相关性 | 直接研究 Y-D 关系 或 使用相同方法 | 仅标题相似但实际不相关 |
+| 相关性 | 与研究主题直接相关 | 仅标题相似但实际不相关 |
 | 时效性 | 近 10 年（核心近 5 年） | 过于陈旧且无奠基性贡献 |
 | 质量 | 发表在同行评审期刊/会议 | 未经审稿的一般性讨论 |
 | 语言 | 中文、英文 | 其他语言（除非用户指定） |
+
+#### 期刊层级加权排序
+
+对通过初筛的文献，按照 `相关度 × 期刊层级` 综合加权排序，优先推荐层级高+相关度高的文献：
+
+| 期刊层级 | 权重 | 判定依据 |
+|---------|------|---------|
+| A+级 | 5 | 用户学校期刊目录中明确列为A+的期刊（如 SMJ, AMR, JIBS, 管理世界, 经济研究等） |
+| A级 | 4 | 用户学校期刊目录中明确列为A的期刊（如 Research Policy, ICC, 中国工业经济等） |
+| B级/CSSCI/SSCI | 3 | CSSCI来源期刊、SSCI索引期刊 |
+| 普通期刊/会议 | 2 | 有同行评审但不在核心索引中 |
+| 经典著作(高被引) | 5 | 被引>1000或公认奠基性著作，不受期刊等级限制 |
+
+**核心文献推荐原则**：核心文献列表中，A+/A级期刊论文占比应 ≥ 30%（如该方向顶刊论文数量不足，需向用户说明原因）。
+
+**实操**：如用户提供了学校期刊目录（PDF/链接），以用户学校目录为准；否则使用通用标准（SSCI分区 + CSSCI来源期刊）。
 
 ### Phase 4: 精读筛选
 
 对通过初筛的论文（通常 30-60 篇），进一步评估：
 
-- 研究设计质量
-- 与本研究的差异点（方法/数据/角度）
-- 核心发现
-- 可借鉴的地方
+- 与本研究主题的关联程度
+- 研究贡献和核心发现
+- 可借鉴的理论视角、方法或数据
+- 与其他文献的对话关系
 
 按相关度分级：
-- **核心文献**（必引）：直接研究同一问题或奠基性论文
-- **重要文献**（建议引）：方法借鉴或理论基础
-- **参考文献**（可引）：背景或边缘相关
+- **核心文献**（必读）：直接研究同一问题或奠基性论文
+- **重要文献**（建议读）：理论基础、方法借鉴或密切相关
+- **参考文献**（可选读）：背景或边缘相关
 
 ### Phase 5: 主题聚类与综述写作
 
 将筛选后的文献按主题组织（不按论文逐篇罗列）：
 
 ```
-组织结构模板:
-1. [D变量] 的测度与概念演进
-2. [D变量] 对 [Y变量] 的实证研究
-   - 2.1 正向效应的证据
-   - 2.2 负向/非线性效应的证据
-   - 2.3 条件性/异质性效应
-3. [识别策略] 在该领域的应用
-4. 研究空白与本文定位
+组织结构根据研究主题动态确定，常见模式：
+
+模式A（概念关系型）:
+1. 概念A 的定义与理论演进
+2. 概念B 的研究现状
+3. A 与 B 关系的已有研究
+   - 共识性发现
+   - 争议与分歧
+4. 研究方法综述
+5. 研究空白与本研究定位
+
+模式B（现象解释型）:
+1. 现象描述与概念界定
+2. 解释视角一（理论X）
+3. 解释视角二（理论Y）
+4. 多视角整合与不足
+5. 本研究的理论切入点
+
+模式C（问题导向型）:
+1. 问题背景
+2. 已有解决方案/研究路径
+3. 各路径的优缺点对比
+4. 尚未解决的部分
+5. 本研究的贡献点
 ```
 
 写作要点：
-- 用"一类研究发现..."而非"A(2020)发现...B(2021)发现..."
+- 用"一类研究发现..."而非"A(2020)发现...B(2021)发现..."逐篇罗列
 - 明确指出文献间的共识和分歧
 - 每一部分结尾说明与本研究的关系
 
-### Phase 6: BibTeX 生成与验证
+### Phase 6: 引用验证与文献列表生成
 
-**绝对禁止凭记忆生成 BibTeX。所有引用必须来自实际检索。**
+**绝对禁止凭记忆生成引用。所有引用必须来自实际检索。**
+
+#### 验证机制
+
+每条引用进行双源交叉验证：
+
+| 验证状态 | 含义 | 标准 |
+|---------|------|------|
+| ✓ 已验证 | 至少 2 个数据源返回一致信息 | 标题+作者+年份匹配 |
+| △ 单源 | 仅 1 个源返回，元数据完整 | 有 DOI 或完整发表信息 |
+| ✗ 存疑 | 信息不一致或无法确认 | 需用户手动确认 |
 
 ```
 验证流程（每条引用）:
-1. 通过 paper-search-mcp 的 get_paper_details() 确认论文存在
-2. 检查: 标题、作者、年份、期刊/会议 是否匹配
-3. 从 DOI 获取标准 BibTeX（如有 DOI）
-4. 无法验证的引用标记为 [UNVERIFIED - 需手动确认]
+1. 通过 paper-search-mcp 在多个源中搜索确认论文存在
+2. 检查: 标题、作者、年份、期刊/会议 是否一致
+3. 获取 DOI 和原文 URL
+4. 无法验证的引用标记为 [✗ 存疑 - 需手动确认]
 
 绝不允许:
-- 凭记忆编写 BibTeX 条目
+- 凭记忆编写引用信息
 - 猜测作者名/年份/期刊名
 - 省略验证步骤
 ```
+
+#### 输出格式
+
+默认输出**通用文献列表**（Markdown 表格 + 详情），适用于任何写作工具：
+
+```markdown
+| # | 标题 | 作者 | 年份 | 来源/期刊 | 相关度 | 验证状态 | URL/DOI |
+|---|------|------|------|----------|--------|---------|---------|
+| 1 | ... | ... | 2024 | ... | ★★★★★ | ✓ 已验证 | https://doi.org/... |
+```
+
+**可选：BibTeX 输出**（仅当用户使用 LaTeX 写作时生成）：
+
+如果用户确认使用 LaTeX，额外生成 `references.bib` 文件，格式为标准 BibTeX。
 
 ### Phase 7: 研究空白总结
 
 基于文献综述，明确指出：
 
 ```
-"综合以上文献，现有研究的主要空白是：
-  1. [空白1] — 尚无人从 [角度] 研究该问题
-  2. [空白2] — 数据/方法的局限（如缺乏面板数据/缺乏因果识别）
-  3. [空白3] — 区域/时段覆盖不足
+"综合以上文献，现有研究的主要空白/不足是：
+  1. [空白1] — 尚无人从 [角度/视角] 研究该问题
+  2. [空白2] — 现有研究在 [数据/方法/理论] 方面的局限
+  3. [空白3] — [领域/时段/地区] 覆盖不足
 
 本研究的定位是填补空白 [X]，具体贡献在于..."
 ```
@@ -221,13 +288,15 @@ Phase 7: 研究空白总结
 文献调研完成后，agent 自检：
 
 - [ ] 中文和英文文献都覆盖了
-- [ ] 搜索维度覆盖了 Y、D、方法、综述
-- [ ] 核心文献（必引）数量 ≥ 10 篇
-- [ ] 所有 BibTeX 条目来自实际检索（非凭记忆）
-- [ ] 无法验证的引用已明确标记
+- [ ] 搜索维度覆盖了核心概念的多个方面
+- [ ] 核心文献（必读）数量 ≥ 10 篇
+- [ ] 所有引用来自实际检索（非凭记忆）
+- [ ] 每篇论文有验证状态标记
+- [ ] 存疑引用已明确标记并告知用户
 - [ ] 文献综述按主题组织，不是逐篇罗列
-- [ ] 明确指出了研究空白和本文定位
+- [ ] 明确指出了研究空白和本研究定位
 - [ ] 发现的与本研究高度相似的论文已告知用户并分析差异
+- [ ] 提供了每篇论文的原文 URL 或 DOI
 
 ---
 
@@ -236,12 +305,35 @@ Phase 7: 研究空白总结
 ### 文件
 
 ```
-papers/<project>/literature/00_search_strategy.md      — 搜索策略记录
-papers/<project>/literature/01_candidate_papers.md     — 候选论文清单（含筛选结果）
-papers/<project>/literature/02_review_thematic.md      — 主题式文献综述
-papers/<project>/literature/03_research_gap.md         — 研究空白分析
-papers/<project>/paper/references.bib                  — BibTeX 文件
+papers/<project>/literature/literature_review.md       — 文献调研报告（含搜索策略、主题综述、候选清单、研究空白）
+papers/<project>/literature/references.bib             — 参考文献库（BibTeX格式）
 ```
+
+`literature_review.md` 的内部结构：
+
+```markdown
+# 文献调研报告
+
+## 一、搜索策略
+（Phase 1 的产出：关键词、搜索维度、数据源、用户偏好记录）
+
+## 二、侦察总结与研究空位判断
+（Phase 7 的产出前置：竞争论文判断、研究空间、数据可得性、风险）
+
+## 三、主题式文献综述
+（Phase 5 的产出：按主题组织，不逐篇罗列）
+
+## 四、候选论文清单
+（Phase 3-4-6 的产出：表格形式，含验证状态、期刊层级、相关度评分）
+
+## 五、研究空白与本研究定位
+（Phase 7 的产出：明确指出空白、本研究贡献点）
+
+## 六、下一步建议
+（核心精读推荐 + 数据收集方向）
+```
+
+> **设计理由**：一份文件比 4-5 份散文件更容易通览和维护。搜索策略和候选清单本身不是交付物，而是综述的过程证据——放在同一文件中既保留了可追溯性，又避免了文件碎片化。
 
 ### Agent Guide 输出
 
@@ -249,26 +341,24 @@ papers/<project>/paper/references.bib                  — BibTeX 文件
 {
   "completed": "literature-survey",
   "artifacts": [
-    "literature/01_candidate_papers.md",
-    "literature/02_review_thematic.md",
-    "literature/03_research_gap.md",
-    "paper/references.bib"
+    "literature/literature_review.md",
+    "literature/references.bib"
   ],
-  "context_written": ["candidate_papers", "literature_review_path", "bib_path", "research_gap"],
+  "context_written": ["candidate_papers", "literature_review_path", "research_gap"],
   "stats": {
     "total_searched": 120,
     "after_dedup": 85,
     "after_screening": 42,
     "core_papers": 15,
-    "bib_entries": 42,
-    "unverified_citations": 2
+    "verified": 38,
+    "single_source": 3,
+    "unverified": 1
   },
   "next_steps": [
-    {"skill": "data-collector", "reason": "文献已梳理，需要获取数据支撑实证", "ready": true},
-    {"skill": "integrity-auditor", "reason": "验证引用真实性（有 2 条未验证）", "ready": true}
+    {"skill": "data-collector", "reason": "文献已梳理，可进入数据搜集", "ready": true},
+    {"skill": "paper-writer", "reason": "文献综述可直接用于论文写作", "ready": true}
   ],
-  "warnings": ["有 2 条引用未能通过 API 验证，已标记，建议用户手动确认"],
-  "mentor_note": "文献综述显示该方向的主流方法是 [X]，你选择 [Y] 方法是一个差异化点。建议在数据阶段特别关注 [变量Z] 的可得性，这是你的方法能否实施的关键。"
+  "warnings": ["有 1 条引用未能通过验证，已标记，建议用户手动确认"]
 }
 ```
 
@@ -283,18 +373,21 @@ papers/<project>/paper/references.bib                  — BibTeX 文件
 
 📄 产出:
   - 候选论文清单 (85 篇初筛 → 42 篇纳入)
-  - 主题式文献综述 (4 个主题)
+  - 主题式文献综述 (X 个主题)
   - 研究空白分析
-  - BibTeX (42 条，其中 2 条待验证)
+  - 文献列表 (42 篇，38 篇已验证，3 篇单源，1 篇待确认)
 
 📊 发现:
-  - 该方向核心文献集中在 [期刊A, 期刊B]
-  - 现有研究主要用 [方法X]，你选择 [方法Y] 是差异化点
-  - [具体发现/建议]
+  - [对搜索结果的判断性总结]
+  - [与用户研究的关联分析]
+
+🔖 重点推荐 (Top 5):
+  1. [论文标题] — [为什么重要，1句话]
+  2. ...
 
 ➡️ 建议下一步:
-  1. 进入数据搜集 — 确认 [关键变量] 的数据来源（推荐）
-  2. 先验证引用 — 有 2 条引用未验证，可以让 integrity-auditor 处理
+  1. [推荐A] — [理由]（推荐）
+  2. [推荐B] — [理由]（可选）
 
 ⚠️ 注意: [如有风险，如发现高度相似论文等]
 
@@ -306,8 +399,12 @@ papers/<project>/paper/references.bib                  — BibTeX 文件
 ## 行为准则
 
 1. **绝不编造引用** — 每条引用必须可追溯到检索记录
-2. **标记不确定性** — 无法验证的标注 [UNVERIFIED]
-3. **中英文并行** — 不能只搜一种语言
-4. **搜完给判断** — "这个方向文献充足/稀缺，你的差异化在于..."
-5. **主动报告** — 发现高度相似论文立即告知，不藏着
-6. **尊重用户判断** — 筛选标准可以根据用户意见调整
+2. **双源验证** — 尽可能用多个数据源交叉确认论文真实性
+3. **标记不确定性** — 无法验证的标注 [✗ 存疑]
+4. **中英文并行** — 不能只搜一种语言
+5. **搜完给判断** — "这个方向文献充足/稀缺，你的差异化在于..."
+6. **主动报告** — 发现高度相似论文立即告知，不藏着
+7. **提供原文入口** — 每篇论文必须附 URL 或 DOI，方便用户访问原文
+8. **尊重用户判断** — 筛选标准可以根据用户意见调整
+9. **期刊层级标注** — 每篇推荐文献标注期刊层级（A+/A/B/其他），核心推荐优先高层级期刊
+10. **坦诚工具局限** — paper-search-mcp 以英文文献源为主，中文文献仅能通过 Google Scholar 中文关键词间接获取部分。如中文文献覆盖不足，主动告知用户并建议其在知网补充搜索后提供给 agent 整合。如已安装 cnki-mcp（`wuruiqi/cnki-mcp`），优先使用

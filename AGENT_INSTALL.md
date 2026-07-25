@@ -105,21 +105,39 @@ claude mcp add paper-search -- python -m paper_search_mcp.server
 
 所有 API Key 均为可选。无 Key 即可使用基础功能，有 Key 可提升速率限制。
 
-#### web-access（信息侦察与网页访问）
+#### web-access（联网与数据获取 — 项目内置）
 
-检测 web-access skill 是否已安装。该 skill 提供 WebSearch、WebFetch 和浏览器 CDP 能力，用于选题验证、数据源定位等非学术文献类搜索。
+用途：提供 WebSearch / WebFetch / curl下载 / CDP浏览器 四层通道调度，用于选题验证、数据源定位、网页数据爬取、文件下载等。是数据搜集阶段实际获取文件和结构化数据的关键能力。
 
-如未安装，告知用户：
+**本 skill 已内置于项目 `skills/web-access/` 中，无需额外安装。** Agent 读取 `skills/web-access/SKILL.md` 即可获得完整联网策略。
 
-> "web-access skill 未检测到。选题阶段的信息侦察和数据源探索将依赖 Agent 平台内置搜索能力，精度可能有限。"
+基础能力检测（层级 1-2，无额外依赖）：
+
+```bash
+# 检查 curl 可用性（macOS/Linux 默认自带）
+which curl && echo "✓ curl 可用" || echo "✗ curl 不可用"
+```
+
+增强能力检测（层级 3，CDP 浏览器自动化，可选）：
+
+```bash
+# 检查 Node.js 版本（需要 22+）
+node --version 2>/dev/null | grep -E "v(2[2-9]|[3-9][0-9])" && echo "✓ Node.js 22+" || echo "△ Node.js <22 或未安装，CDP 模式不可用（不影响基础功能）"
+```
+
+CDP 模式前置配置（仅在需要登录态/动态交互时使用）：
+1. 在浏览器地址栏打开：Chrome `chrome://inspect/#remote-debugging` 或 Edge `edge://inspect/#remote-debugging`
+2. 勾选 "Allow remote debugging for this browser instance"
+
+**层级 1-2（WebSearch + WebFetch + curl）已足够完成绝大多数研究任务。** CDP 模式为可选增强，仅在需要登录态或反爬严格的站点时使用。
 
 #### 能力降级说明
 
 | 缺少 | 影响 | 替代方案 |
 |------|------|---------|
-| paper-search-mcp | 学术文献搜索降为通用搜索 | 通过 web-access 访问 Google Scholar / Semantic Scholar 网页版 |
-| web-access | 信息侦察精度降低 | 使用 Agent 平台内置 web search / web fetch |
-| 两者都无 | 搜索能力严重受限 | 需要用户手动提供文献列表和数据源 |
+| paper-search-mcp | 学术文献搜索降为通用搜索 | web-access 通过 WebSearch 访问 Google Scholar / Semantic Scholar |
+| Node.js 22+ | CDP 浏览器模式不可用 | web-access 层级 1-2 仍可完成大部分任务（WebSearch + WebFetch + curl） |
+| 两者都无 | 搜索能力受限 | 需要用户手动提供文献列表和数据源 |
 
 ### 6. 加载 Skill
 

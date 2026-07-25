@@ -39,6 +39,7 @@ __pycache__/
 *.egg-info/
 .venv/
 venv/
+uv.lock
 
 # ========================
 # IDE
@@ -57,6 +58,7 @@ Thumbs.db
 # ========================
 .claude/
 .claude-plugin/
+.kiro/
 commands/
 hooks/
 
