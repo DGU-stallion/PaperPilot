@@ -1,0 +1,60 @@
+{
+  "skill": "literature-survey",
+  "description": "Evaluation cases for literature survey skill",
+  "cases": [
+    {
+      "id": "lit_basic_search",
+      "description": "Basic literature search produces papers with URLs",
+      "skill": "literature-survey",
+      "prompt": "搜索关于数字经济与就业的相关文献",
+      "expected_checks": ["lit_has_papers", "lit_has_urls", "markdown_has_content"],
+      "should_trigger": true,
+      "context": {"min_papers": 10, "min_urls": 5}
+    },
+    {
+      "id": "lit_bilingual",
+      "description": "Search covers both Chinese and English literature",
+      "skill": "literature-survey",
+      "prompt": "帮我搜索AI对劳动力市场影响的中英文文献",
+      "expected_checks": ["lit_bilingual_search", "lit_has_papers"],
+      "should_trigger": true,
+      "context": {"min_papers": 10}
+    },
+    {
+      "id": "lit_verification",
+      "description": "Papers have verification status markers",
+      "skill": "literature-survey",
+      "prompt": "搜索并验证关于双重差分方法应用的论文",
+      "expected_checks": ["lit_has_verification_status", "lit_has_urls"],
+      "should_trigger": true,
+      "context": {}
+    },
+    {
+      "id": "lit_thematic_review",
+      "description": "Output includes thematic organization, not paper-by-paper listing",
+      "skill": "literature-survey",
+      "prompt": "写一份关于绿色金融的主题式文献综述",
+      "expected_checks": ["markdown_has_content"],
+      "should_trigger": true,
+      "context": {"min_chars": 500}
+    },
+    {
+      "id": "lit_negative_unrelated",
+      "description": "Should NOT trigger for unrelated coding task",
+      "skill": "literature-survey",
+      "prompt": "帮我写一个Python函数计算斐波那契数列",
+      "expected_checks": [],
+      "should_trigger": false,
+      "context": {}
+    },
+    {
+      "id": "lit_negative_data",
+      "description": "Should NOT trigger for data collection task",
+      "skill": "literature-survey",
+      "prompt": "帮我下载中国省级面板数据",
+      "expected_checks": [],
+      "should_trigger": false,
+      "context": {}
+    }
+  ]
+}

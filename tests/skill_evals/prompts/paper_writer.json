@@ -1,0 +1,42 @@
+{
+  "skill": "paper-writer",
+  "description": "Evaluation cases for paper writer skill",
+  "cases": [
+    {
+      "id": "paper_has_all_sections",
+      "description": "Paper output has all required sections",
+      "skill": "paper-writer",
+      "prompt": "根据已有分析结果撰写完整论文",
+      "expected_checks": ["paper_has_sections", "paper_citations_exist"],
+      "should_trigger": true,
+      "context": {"min_citations": 5}
+    },
+    {
+      "id": "paper_no_placeholders",
+      "description": "Paper has no placeholder text",
+      "skill": "paper-writer",
+      "prompt": "完成论文草稿，不要留任何待补充内容",
+      "expected_checks": ["paper_no_placeholders", "markdown_has_content"],
+      "should_trigger": true,
+      "context": {"min_chars": 1000}
+    },
+    {
+      "id": "paper_introduction",
+      "description": "Write introduction section",
+      "skill": "paper-writer",
+      "prompt": "写论文引言部分",
+      "expected_checks": ["markdown_has_content"],
+      "should_trigger": true,
+      "context": {"min_chars": 300}
+    },
+    {
+      "id": "paper_negative_analysis",
+      "description": "Should NOT trigger for regression analysis",
+      "skill": "paper-writer",
+      "prompt": "运行稳健性检验回归",
+      "expected_checks": [],
+      "should_trigger": false,
+      "context": {}
+    }
+  ]
+}

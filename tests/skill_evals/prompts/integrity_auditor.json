@@ -1,0 +1,42 @@
+{
+  "skill": "integrity-auditor",
+  "description": "Evaluation cases for academic integrity auditor skill",
+  "cases": [
+    {
+      "id": "audit_citation_verify",
+      "description": "Verifies citations are real papers",
+      "skill": "integrity-auditor",
+      "prompt": "检查我的引用是否都是真实存在的论文",
+      "expected_checks": ["markdown_has_content"],
+      "should_trigger": true,
+      "context": {"min_chars": 50}
+    },
+    {
+      "id": "audit_plagiarism",
+      "description": "Checks for potential plagiarism concerns",
+      "skill": "integrity-auditor",
+      "prompt": "帮我检查这段文字是否有抄袭问题",
+      "expected_checks": ["markdown_has_content"],
+      "should_trigger": true,
+      "context": {}
+    },
+    {
+      "id": "audit_data_fabrication",
+      "description": "Identifies suspicious data patterns",
+      "skill": "integrity-auditor",
+      "prompt": "检查我的回归结果是否有数据造假嫌疑",
+      "expected_checks": ["markdown_has_content"],
+      "should_trigger": true,
+      "context": {}
+    },
+    {
+      "id": "audit_negative_writing",
+      "description": "Should NOT trigger for writing request",
+      "skill": "integrity-auditor",
+      "prompt": "帮我写一段研究背景的介绍",
+      "expected_checks": [],
+      "should_trigger": false,
+      "context": {}
+    }
+  ]
+}

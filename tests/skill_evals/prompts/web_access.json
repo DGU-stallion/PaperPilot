@@ -1,0 +1,42 @@
+{
+  "skill": "web-access",
+  "description": "Evaluation cases for web access capability skill",
+  "cases": [
+    {
+      "id": "web_search_academic",
+      "description": "Performs academic web search",
+      "skill": "web-access",
+      "prompt": "搜索最新的AI就业研究论文",
+      "expected_checks": ["lit_has_urls"],
+      "should_trigger": true,
+      "context": {"min_urls": 3}
+    },
+    {
+      "id": "web_download_data",
+      "description": "Downloads data from URL",
+      "skill": "web-access",
+      "prompt": "从统计局网站下载最新的就业数据",
+      "expected_checks": [],
+      "should_trigger": true,
+      "context": {}
+    },
+    {
+      "id": "web_fetch_page",
+      "description": "Fetches and extracts webpage content",
+      "skill": "web-access",
+      "prompt": "获取这个网页的内容并提取关键信息",
+      "expected_checks": ["markdown_has_content"],
+      "should_trigger": true,
+      "context": {"min_chars": 50}
+    },
+    {
+      "id": "web_negative_local",
+      "description": "Should NOT trigger for local file operation",
+      "skill": "web-access",
+      "prompt": "读取本地的 data.csv 文件",
+      "expected_checks": [],
+      "should_trigger": false,
+      "context": {}
+    }
+  ]
+}

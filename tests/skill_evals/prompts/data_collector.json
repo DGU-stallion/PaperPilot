@@ -1,0 +1,33 @@
+{
+  "skill": "data-collector",
+  "description": "Evaluation cases for data collector skill",
+  "cases": [
+    {
+      "id": "data_source_documented",
+      "description": "Data acquisition documents the source",
+      "skill": "data-collector",
+      "prompt": "帮我获取中国省级数字经济发展数据",
+      "expected_checks": ["data_has_source", "markdown_has_content"],
+      "should_trigger": true,
+      "context": {}
+    },
+    {
+      "id": "data_variables_defined",
+      "description": "Data output defines key variables",
+      "skill": "data-collector",
+      "prompt": "搜集制造业企业数字化转型和就业数据",
+      "expected_checks": ["data_has_variables"],
+      "should_trigger": true,
+      "context": {"required_vars": ["就业", "数字化", "企业"]}
+    },
+    {
+      "id": "data_negative_literature",
+      "description": "Should NOT trigger for literature search",
+      "skill": "data-collector",
+      "prompt": "帮我搜索数字经济相关论文",
+      "expected_checks": [],
+      "should_trigger": false,
+      "context": {}
+    }
+  ]
+}

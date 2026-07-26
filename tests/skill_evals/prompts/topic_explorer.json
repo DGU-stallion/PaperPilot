@@ -1,0 +1,42 @@
+{
+  "skill": "topic-explorer",
+  "description": "Evaluation cases for topic exploration skill",
+  "cases": [
+    {
+      "id": "topic_research_question",
+      "description": "Helps formulate clear research question",
+      "skill": "topic-explorer",
+      "prompt": "我想研究人工智能对就业的影响",
+      "expected_checks": ["markdown_has_content"],
+      "should_trigger": true,
+      "context": {"min_chars": 200}
+    },
+    {
+      "id": "topic_variables",
+      "description": "Identifies core variables (Y, D)",
+      "skill": "topic-explorer",
+      "prompt": "帮我确定数字化转型与企业创新的研究变量",
+      "expected_checks": ["markdown_has_content"],
+      "should_trigger": true,
+      "context": {"min_chars": 100}
+    },
+    {
+      "id": "topic_research_design",
+      "description": "Suggests appropriate research methodology",
+      "skill": "topic-explorer",
+      "prompt": "我想研究碳排放政策的效果，应该用什么方法",
+      "expected_checks": ["markdown_has_content"],
+      "should_trigger": true,
+      "context": {"min_chars": 150}
+    },
+    {
+      "id": "topic_negative_analysis",
+      "description": "Should NOT trigger for pure analysis request",
+      "skill": "topic-explorer",
+      "prompt": "运行基准回归并输出结果表格",
+      "expected_checks": [],
+      "should_trigger": false,
+      "context": {}
+    }
+  ]
+}

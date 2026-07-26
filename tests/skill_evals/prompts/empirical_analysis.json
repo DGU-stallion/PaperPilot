@@ -1,0 +1,33 @@
+{
+  "skill": "empirical-analysis",
+  "description": "Evaluation cases for empirical analysis skill",
+  "cases": [
+    {
+      "id": "analysis_regression_output",
+      "description": "Analysis produces regression table",
+      "skill": "empirical-analysis",
+      "prompt": "运行基准回归分析：Y=就业，D=数字化指数，控制变量=企业规模、年龄、杠杆率",
+      "expected_checks": ["analysis_has_regression_table", "analysis_latex_valid"],
+      "should_trigger": true,
+      "context": {}
+    },
+    {
+      "id": "analysis_fe_did",
+      "description": "FE/DID analysis with panel data",
+      "skill": "empirical-analysis",
+      "prompt": "使用固定效应模型分析数字化对就业的影响",
+      "expected_checks": ["analysis_has_regression_table"],
+      "should_trigger": true,
+      "context": {}
+    },
+    {
+      "id": "analysis_negative_writing",
+      "description": "Should NOT trigger for paper writing",
+      "skill": "empirical-analysis",
+      "prompt": "帮我写论文的引言部分",
+      "expected_checks": [],
+      "should_trigger": false,
+      "context": {}
+    }
+  ]
+}
