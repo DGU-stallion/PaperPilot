@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 # PaperPilot — 一键安装脚本
-# 用法: curl -fsSL https://raw.githubusercontent.com/DGU-stallion/economic-paper-pipeline/main/install.sh | bash
-# 或:   git clone ... && cd economic-paper-pipeline && bash install.sh
+# 用法: curl -fsSL https://raw.githubusercontent.com/DGU-stallion/PaperPilot/main/install.sh | bash
+# 或:   git clone ... && cd PaperPilot && bash install.sh
 
 set -euo pipefail
 
-REPO_URL="https://github.com/DGU-stallion/economic-paper-pipeline.git"
-REPO_DIR="economic-paper-pipeline"
+REPO_URL="https://github.com/DGU-stallion/PaperPilot.git"
+REPO_DIR="PaperPilot"
 
 # --- 颜色 ---
 GREEN='\033[0;32m'
@@ -79,38 +79,15 @@ setup_venv() {
 # --- 运行诊断 ---
 run_doctor() {
     info "运行环境诊断..."
-    .venv/bin/python install/bootstrap.py --check --profile standard --json 2>/dev/null || true
-}
-
-# --- 检测搜索能力 ---
-check_search_capabilities() {
     echo ""
-    echo "━━━ 搜索能力检测 ━━━"
-
-    # 检测 paper-search-mcp
-    if command -v paper-search &>/dev/null || pip show paper-search-mcp &>/dev/null 2>&1; then
-        info "paper-search-mcp: 已安装（学术文献搜索可用）"
-    else
-        warn "paper-search-mcp: 未安装"
-        echo "    推荐安装以获得学术文献精确搜索能力："
-        echo "    pip install paper-search-mcp"
-        echo "    或: uvx paper-search-mcp"
-    fi
-
-    # 检测 web-access (检查 skill 目录)
-    if [ -f "$HOME/.skills-manager/skills/web-access/SKILL.md" ] || \
-       [ -f ".skills/web-access/SKILL.md" ]; then
-        info "web-access: 已安装（网页搜索与抓取可用）"
-    else
-        warn "web-access: 未检测到"
-        echo "    推荐安装以获得信息侦察和网页深度访问能力"
-    fi
+    .venv/bin/python install/bootstrap.py --check --profile standard
+    echo ""
 }
 
 # --- 输出摘要 ---
 print_summary() {
     echo ""
-    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
     echo ""
     info "PaperPilot 安装完成！"
     echo ""
@@ -120,7 +97,7 @@ print_summary() {
     echo ""
     echo "━━━ 下一步 ━━━"
     echo ""
-    echo "  将以下内容发送给你的 Coding Agent："
+    echo "  将以下内容发送给你的 Coding Agent（Claude Code / Kiro / Cursor 等）："
     echo ""
     echo "  ┌──────────────────────────────────────────┐"
     echo "  │ 我已安装 PaperPilot，请读取 CLAUDE.md。   │"
@@ -145,7 +122,6 @@ main() {
     clone_or_update
     setup_venv
     run_doctor
-    check_search_capabilities
     print_summary
 }
 
