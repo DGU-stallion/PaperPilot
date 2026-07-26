@@ -1,39 +1,92 @@
 {
   "skill": "topic-explorer",
-  "description": "Evaluation cases for topic exploration skill",
+  "description": "Evaluation cases for topic-explorer v7 — story-first brainstorming approach",
   "cases": [
     {
-      "id": "topic_research_question",
-      "description": "Helps formulate clear research question",
+      "id": "topic_has_research_question",
+      "description": "Output must contain a clear research question",
       "skill": "topic-explorer",
-      "prompt": "我想研究人工智能对就业的影响",
-      "expected_checks": ["markdown_has_content"],
+      "prompt": "我想研究AI对产业链价值分配的影响",
+      "expected_checks": ["topic_has_research_question", "markdown_has_content"],
       "should_trigger": true,
-      "context": {"min_chars": 200}
+      "context": {"min_chars": 300}
     },
     {
-      "id": "topic_variables",
-      "description": "Identifies core variables (Y, D)",
+      "id": "topic_explanatory_question",
+      "description": "Research question must be explanatory, not merely descriptive",
       "skill": "topic-explorer",
-      "prompt": "帮我确定数字化转型与企业创新的研究变量",
-      "expected_checks": ["markdown_has_content"],
+      "prompt": "我想研究新易盛的价值跃升",
+      "expected_checks": ["topic_question_is_explanatory"],
       "should_trigger": true,
-      "context": {"min_chars": 100}
+      "context": {}
     },
     {
-      "id": "topic_research_design",
-      "description": "Suggests appropriate research methodology",
+      "id": "topic_has_puzzle",
+      "description": "Proposal must identify a research puzzle / motivating phenomenon",
       "skill": "topic-explorer",
-      "prompt": "我想研究碳排放政策的效果，应该用什么方法",
-      "expected_checks": ["markdown_has_content"],
+      "prompt": "帮我选题，方向是数字经济和就业",
+      "expected_checks": ["topic_has_puzzle"],
       "should_trigger": true,
-      "context": {"min_chars": 150}
+      "context": {}
+    },
+    {
+      "id": "topic_story_line_required",
+      "description": "Proposal must contain an explicit story line before being finalised",
+      "skill": "topic-explorer",
+      "prompt": "帮我把这个选题做成完整研究方案：AI技术范式变革如何使后发企业实现价值跃升",
+      "expected_checks": ["topic_has_story_line", "topic_has_research_question"],
+      "should_trigger": true,
+      "context": {}
+    },
+    {
+      "id": "topic_boundary_defined",
+      "description": "Proposal must state what is out of scope",
+      "skill": "topic-explorer",
+      "prompt": "研究成都新易盛的全球价值链升级路径",
+      "expected_checks": ["topic_has_boundary"],
+      "should_trigger": true,
+      "context": {}
+    },
+    {
+      "id": "topic_feasibility_addressed",
+      "description": "Proposal must address data/evidence feasibility",
+      "skill": "topic-explorer",
+      "prompt": "我想做一个关于光通信企业在AI时代价值跃升的案例研究",
+      "expected_checks": ["topic_has_feasibility"],
+      "should_trigger": true,
+      "context": {}
+    },
+    {
+      "id": "topic_full_proposal",
+      "description": "Complete proposal passes all core checks",
+      "skill": "topic-explorer",
+      "prompt": "帮我完成完整的选题分析：AI产业链重构背景下，新易盛为什么能将产业机会转化为价值跃升？",
+      "expected_checks": [
+        "topic_has_research_question",
+        "topic_question_is_explanatory",
+        "topic_has_puzzle",
+        "topic_has_story_line",
+        "topic_has_boundary",
+        "topic_has_feasibility",
+        "markdown_has_content"
+      ],
+      "should_trigger": true,
+      "context": {"min_chars": 500}
     },
     {
       "id": "topic_negative_analysis",
-      "description": "Should NOT trigger for pure analysis request",
+      "description": "Should NOT trigger for pure empirical analysis request",
       "skill": "topic-explorer",
       "prompt": "运行基准回归并输出结果表格",
+      "expected_checks": [],
+      "should_trigger": false,
+      "context": {}
+    },
+    {
+      "id": "topic_negative_writing",
+      "description": "Should NOT trigger for paper-writing request",
+      "skill": "topic-explorer",
+      "prompt": "帮我写第三章的案例分析",
       "expected_checks": [],
       "should_trigger": false,
       "context": {}

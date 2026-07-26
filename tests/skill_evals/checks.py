@@ -62,6 +62,14 @@ class CheckRegistry:
     
     def _register_builtin_checks(self) -> None:
         """Register all built-in checks."""
+        # Topic explorer checks
+        self.register("topic_has_research_question", check_topic_has_research_question)
+        self.register("topic_question_is_explanatory", check_topic_question_is_explanatory)
+        self.register("topic_has_puzzle", check_topic_has_puzzle)
+        self.register("topic_has_story_line", check_topic_has_story_line)
+        self.register("topic_has_boundary", check_topic_has_boundary)
+        self.register("topic_has_feasibility", check_topic_has_feasibility)
+
         # Literature survey checks
         self.register("lit_has_papers", check_lit_has_papers)
         self.register("lit_has_urls", check_lit_has_urls)
@@ -85,6 +93,164 @@ class CheckRegistry:
         self.register("file_exists", check_file_exists)
         self.register("json_valid", check_json_valid)
         self.register("markdown_has_content", check_markdown_has_content)
+
+
+# =============================================================================
+# Topic Explorer Checks
+# =============================================================================
+
+def check_topic_has_research_question(content: str, context: dict) -> CheckResult:
+    """Check that the proposal contains a clear research question section."""
+    patterns = [
+        r"研究问题",
+        r"research question",
+        r"核心问题",
+        r"本文.*研究",
+        r"本文.*解释",
+    ]
+    found = any(re.search(p, content, re.IGNORECASE) for p in patterns)
+    return CheckResult(
+        passed=found,
+        check_id="topic_has_research_question",
+        message="Research question section found" if found else "No research question section found",
+    )
+
+
+def check_topic_question_is_explanatory(content: str, context: dict) -> CheckResult:
+    """Check that the research question is explanatory/mechanistic, not merely descriptive.
+
+    Looks for 'why/how/mechanism/condition' framing rather than 'what/describe/how to'.
+    """
+    # Positive signals: explanatory / mechanistic framing
+    explanatory_patterns = [
+        r"为什么",
+        r"通过什么.*机制",
+        r"什么条件",
+        r"如何.*转化",
+        r"why\b",
+        r"mechanism",
+        r"how.*lead",
+        r"under what condition",
+        r"驱动因素",
+        r"形成机制",
+        r"影响机制",
+    ]
+    # Negative signals: purely descriptive framing
+    descriptive_patterns = [
+        r"如何.*实现.*路径",   # "如何实现XX路径" — descriptive
+        r"发展历程",
+        r"做了什么",
+    ]
+
+    has_explanatory = any(re.search(p, content, re.IGNORECASE) for p in explanatory_patterns)
+    has_descriptive_only = (
+        not has_explanatory
+        and any(re.search(p, content, re.IGNORECASE) for p in descriptive_patterns)
+    )
+
+    passed = has_explanatory and not has_descriptive_only
+
+    if has_explanatory:
+        msg = "Research question appears explanatory/mechanistic"
+    elif has_descriptive_only:
+        msg = "Research question appears purely descriptive — should be upgraded to explanatory"
+    else:
+        msg = "Could not determine question type — check manually"
+
+    return CheckResult(
+        passed=passed,
+        check_id="topic_question_is_explanatory",
+        message=msg,
+        details={"has_explanatory": has_explanatory, "has_descriptive_only": has_descriptive_only},
+    )
+
+
+def check_topic_has_puzzle(content: str, context: dict) -> CheckResult:
+    """Check that the proposal identifies a research puzzle / phenomenon worth explaining."""
+    patterns = [
+        r"值得.*解释",
+        r"反直觉",
+        r"puzzle",
+        r"现象",
+        r"为什么.*不是.*而是",
+        r"奇怪",
+        r"矛盾",
+        r"研究.*动机",
+        r"研究背景",
+        r"现实背景",
+    ]
+    found = any(re.search(p, content, re.IGNORECASE) for p in patterns)
+    return CheckResult(
+        passed=found,
+        check_id="topic_has_puzzle",
+        message="Research puzzle / motivating phenomenon found" if found else "No research puzzle identified",
+    )
+
+
+def check_topic_has_story_line(content: str, context: dict) -> CheckResult:
+    """Check that the proposal contains an explicit story line / causal chain."""
+    patterns = [
+        r"故事",
+        r"story",
+        r"因果",
+        r"→|->|↓",          # arrow characters indicating a chain
+        r"causal chain",
+        r"解释链",
+        r"主线",
+        r"逻辑.*链",
+        r"一句话.*论文",
+        r"本文.*解释.*发现",
+    ]
+    found = any(re.search(p, content, re.IGNORECASE) for p in patterns)
+    return CheckResult(
+        passed=found,
+        check_id="topic_has_story_line",
+        message="Story line / causal chain found" if found else "No explicit story line found — required before finalising proposal",
+    )
+
+
+def check_topic_has_boundary(content: str, context: dict) -> CheckResult:
+    """Check that the proposal states what is OUT of scope (research boundary)."""
+    patterns = [
+        r"不.*研究",
+        r"不.*讨论",
+        r"超出.*范围",
+        r"研究边界",
+        r"边界",
+        r"范围.*限定",
+        r"not.*study",
+        r"out of scope",
+        r"beyond.*scope",
+        r"局限",
+    ]
+    found = any(re.search(p, content, re.IGNORECASE) for p in patterns)
+    return CheckResult(
+        passed=found,
+        check_id="topic_has_boundary",
+        message="Research boundary / out-of-scope statement found" if found else "No research boundary defined",
+    )
+
+
+def check_topic_has_feasibility(content: str, context: dict) -> CheckResult:
+    """Check that the proposal addresses data / evidence feasibility."""
+    patterns = [
+        r"数据.*来源|来源.*数据",
+        r"数据.*可得",
+        r"可行性",
+        r"data.*source",
+        r"feasib",
+        r"年报|公告|财报",
+        r"数据库",
+        r"样本",
+        r"案例.*获取",
+        r"公开.*数据",
+    ]
+    found = any(re.search(p, content, re.IGNORECASE) for p in patterns)
+    return CheckResult(
+        passed=found,
+        check_id="topic_has_feasibility",
+        message="Feasibility / data source addressed" if found else "No feasibility assessment found",
+    )
 
 
 # =============================================================================
