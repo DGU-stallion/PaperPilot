@@ -18,8 +18,8 @@
 如果当前目录不是 PaperPilot 仓库，克隆：
 
 ```bash
-git clone https://github.com/DGU-stallion/economic-paper-pipeline.git
-cd economic-paper-pipeline
+git clone https://github.com/DGU-stallion/PaperPilot.git
+cd PaperPilot
 ```
 
 如果仓库已存在，先检查工作区；不要覆盖用户未提交的修改。

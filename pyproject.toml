@@ -30,8 +30,8 @@ dev = [
 pp = "scripts.pipeline:main"
 
 [project.urls]
-Homepage = "https://github.com/DGU-stallion/economic-paper-pipeline"
-Repository = "https://github.com/DGU-stallion/economic-paper-pipeline"
+Homepage = "https://github.com/DGU-stallion/PaperPilot"
+Repository = "https://github.com/DGU-stallion/PaperPilot"
 
 [tool.setuptools.dynamic]
 version = {attr = "scripts.__version__"}

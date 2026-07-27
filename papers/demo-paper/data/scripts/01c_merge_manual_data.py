@@ -13,7 +13,7 @@ import pandas as pd
 import numpy as np
 from pathlib import Path
 
-PROJECT_ROOT = Path("D:/Project/economic-paper-pipeline")
+PROJECT_ROOT = Path("D:/Project/PaperPilot")
 CLEAN_DIR = PROJECT_ROOT / "data" / "clean"
 
 

@@ -4,10 +4,9 @@
 
 PaperPilot 是一套以 Skills 形式运行于 Claude Code、Codex、Kiro、Cursor 等通用 Coding Agent 的科研协作系统。它不是一个独立 Agent，而是赋能已有 Agent 的技能包——安装后，你的 Agent 就变成了一个懂学术规范、能搜文献、会跑实证的研究伙伴。
 
-[![Version](https://img.shields.io/badge/version-6.0.0a1-blue)](https://github.com/DGU-stallion/economic-paper-pipeline)
+[![Version](https://img.shields.io/badge/version-7.0.0-blue)](https://github.com/DGU-stallion/PaperPilot)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 [![Python](https://img.shields.io/badge/Python-3.11%2B-blue)](https://www.python.org/)
-[![CI](https://github.com/DGU-stallion/economic-paper-pipeline/actions/workflows/ci.yml/badge.svg)](https://github.com/DGU-stallion/economic-paper-pipeline/actions)
 
 ---
 
@@ -16,7 +15,7 @@ PaperPilot 是一套以 Skills 形式运行于 Claude Code、Codex、Kiro、Curs
 ### 方式一：一键脚本（推荐）
 
 ```bash
-bash <(curl -fsSL https://raw.githubusercontent.com/DGU-stallion/economic-paper-pipeline/main/install.sh)
+bash <(curl -fsSL https://raw.githubusercontent.com/DGU-stallion/PaperPilot/main/install.sh)
 ```
 
 ### 方式二：让 Coding Agent 安装
@@ -24,7 +23,7 @@ bash <(curl -fsSL https://raw.githubusercontent.com/DGU-stallion/economic-paper-
 将这段话复制给你的 Coding Agent（Claude Code / Kiro / Cursor / Codex）：
 
 ```text
-请为我安装 PaperPilot：https://github.com/DGU-stallion/economic-paper-pipeline
+请为我安装 PaperPilot：https://github.com/DGU-stallion/PaperPilot
 读取 AGENT_INSTALL.md 完成安装和搜索能力配置，然后引导我开始。
 ```
 

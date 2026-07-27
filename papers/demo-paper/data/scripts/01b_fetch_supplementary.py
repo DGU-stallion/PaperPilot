@@ -33,7 +33,7 @@ import requests
 
 warnings.filterwarnings("ignore")
 
-PROJECT_ROOT = Path("D:/Project/economic-paper-pipeline")
+PROJECT_ROOT = Path("D:/Project/PaperPilot")
 RAW_DIR = PROJECT_ROOT / "data" / "raw"
 CLEAN_DIR = PROJECT_ROOT / "data" / "clean"
 
