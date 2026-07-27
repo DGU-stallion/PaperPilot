@@ -64,7 +64,7 @@ PaperPilot 不是一个等指令的工具。它会：
 ### Skills 架构
 
 ```
-[paper-agent]  ← 元技能：了解用户 + 诊断 + 编排 + 主动引导
+[paperpilot]  ← 论文领航员：了解用户 + 诊断 + 编排 + 主动引导
    │
    ├── topic-explorer        选题探索 (5W1H + 信息侦察 → 研究问题)
    ├── literature-survey     文献调研 (PRISMA 式多源检索 → 综述 + .bib)
@@ -107,7 +107,7 @@ paperpilot/
 ├── install.sh                # 一键安装脚本
 │
 ├── skills/                   # 技能包（核心内容）
-│   ├── paper-agent/          #   元技能：用户画像 + 编排 + 搜索策略
+│   ├── AGENTS.md             #   paperpilot：用户画像 + 编排 + 搜索策略
 │   ├── topic-explorer/       #   选题探索
 │   ├── literature-survey/    #   文献调研
 │   ├── data-collector/       #   数据搜集

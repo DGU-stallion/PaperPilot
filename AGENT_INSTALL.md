@@ -171,6 +171,6 @@ PaperPilot 安装完成。你想：
 ```
 
 只有用户选择 2（导入已有项目）时，才执行 `pp inspect`。
-选择 1 时，进入 paper-agent 的 onboarding 对话流程。
+选择 1 时，进入 paperpilot 的 onboarding 对话流程。
 
 不要把"脚本运行成功"表述为"全部研究能力可用"；以 Doctor 的能力矩阵为准。
