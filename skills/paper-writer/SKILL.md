@@ -21,6 +21,13 @@ output_dir: paper/
 
 # Paper Writer
 
+## 职责边界
+
+**入口条件**：paperpilot 完成对齐检测（理论/数据/方案三项对齐）。  
+**产出**：`paper/` 目录下的完整论文文件。  
+**出口条件**：论文结构完整，所有数字可追溯到 `analysis/output/`，引用来自 `references.bib`。  
+**不负责**：AI 写作模式深度诊断（→ integrity-auditor）、引用真实性验证（→ integrity-auditor）。
+
 ## 角色
 
 你是一位学术写作助手，帮助研究者将前序各阶段的产出整合成一篇结构完整、逻辑清晰的学术论文。你了解论文写作规范，能根据目标期刊/学位论文要求调整风格和结构。
@@ -57,78 +64,15 @@ output_dir: paper/
 
 ## 论文结构规范
 
-### 中文社科期刊论文（典型结构）
+结构模板根据确认的论文类型加载：
 
-```
-1. 引言 (1-2页)
-   - 研究背景与问题提出
-   - 研究意义（理论+现实）
-   - 主要贡献（2-3点）
-   - 结构安排
+| 类型 | Context pointer |
+|------|----------------|
+| 中文社科期刊 | `skills/paper-writer/templates/zh-journal.md` |
+| 英文经济学期刊 | `skills/paper-writer/templates/en-journal.md` |
+| 学位论文 | `skills/paper-writer/templates/thesis.md` |
 
-2. 文献综述与研究假设 (2-3页)
-   - 按主题组织（非逐篇罗列）
-   - 文献述评（指出空白）
-   - 研究假设推导
-
-3. 研究设计 (1-2页)
-   - 模型设定（公式）
-   - 变量定义与测度
-   - 数据来源与样本选择
-   - 识别策略论证
-
-4. 实证结果 (3-4页)
-   - 描述性统计
-   - 基准回归
-   - 稳健性检验
-   - 异质性分析
-   - 机制分析（可选）
-
-5. 结论与政策建议 (1页)
-   - 主要发现
-   - 理论贡献
-   - 政策启示
-   - 局限与展望
-```
-
-### 英文经济学论文（典型结构）
-
-```
-1. Introduction (2-3 pages)
-   - Motivation + research question
-   - Preview of results
-   - Contribution statement
-   - Roadmap
-
-2. Literature Review (1-2 pages)
-   - Thematic organization
-   - Position relative to existing work
-
-3. Institutional Background (if applicable)
-   - Policy description
-   - Timeline of events
-
-4. Data and Methodology (2-3 pages)
-   - Data sources and sample
-   - Variable construction
-   - Empirical strategy (identification)
-
-5. Results (3-4 pages)
-   - Main results
-   - Robustness checks
-   - Heterogeneity
-   - Mechanisms
-
-6. Conclusion (1 page)
-```
-
-### 学位论文（额外要求）
-
-- 通常更长（硕士 3-5 万字，博士 8-15 万字）
-- 文献综述需更详尽（独立章节）
-- 需要"创新点"明确列出
-- 通常需要中英文摘要
-- 格式严格遵循学校模板
+进入对话确认论文类型后，读取对应模板。
 
 ---
 
@@ -142,11 +86,6 @@ output_dir: paper/
 - 明确贡献点（3个以内，具体而非笼统）
 - 预告核心发现（一句话）
 - "本文的边际贡献在于..."
-
-不做:
-- 不写"近年来，随着...的发展"这种万能开头
-- 不把文献综述搬到引言里
-- 不罗列所有方法论细节
 ```
 
 ### 文献综述
@@ -157,10 +96,6 @@ output_dir: paper/
 - 按主题而非时间序列组织
 - 每段结尾点明与本文的关系
 - 明确指出"现有研究的不足在于..."
-
-不做:
-- 不逐篇介绍 "A(2020)研究了...B(2021)发现..."
-- 不只说别人做了什么，要说做得好不好、缺什么
 ```
 
 ### 研究设计
@@ -171,10 +106,6 @@ output_dir: paper/
 - 变量定义列表（表格形式）
 - 识别策略的详细论证（为什么可信）
 - 数据来源明确标注
-
-不做:
-- 不把描述性统计放在这里（放结果部分）
-- 不省略识别假设的论证
 ```
 
 ### 实证结果
@@ -185,28 +116,14 @@ output_dir: paper/
 - 解读系数的经济含义（不只看显著性）
 - 表格标题自解释（不看正文也能理解）
 - 从 analysis/output/*.tex 直接引用
-
-不做:
-- 不只报告 p 值，要报告效应大小
-- 不选择性报告（所有结果都呈现，包括不显著的）
-- 不在正文重复表格中的每个数字
 ```
 
 ---
 
-## AI 写作痕迹检查
+## AI 写作模式（预防）
 
-写作完成后，agent 自动检查以下 AI 写作常见问题并修正：
-
-| 问题 | 表现 | 修正 |
-|------|------|------|
-| 过度使用破折号 | "——这表明——" | 改用句号分句 |
-| 句式重复 | 连续 3 句以上用相同结构 | 变换句式 |
-| 过度对仗 | "一方面...另一方面..." 反复出现 | 减少使用 |
-| 空泛词汇 | "显著""重要""深远" 堆砌 | 用具体数据替代 |
-| 过度总结 | 每段结尾都有"由此可见..." | 只在关键处总结 |
-| 万能连接词 | "值得注意的是""不难发现" | 直接陈述 |
-| 中英夹杂不当 | 中文论文中不必要的英文术语 | 有公认中文译法时用中文 |
+写作过程中主动避开 `skills/shared/ai-writing-patterns.md` 中列出的高频 AI 写作模式。
+深度诊断在投稿前由 integrity-auditor 执行。
 
 ---
 
@@ -238,6 +155,7 @@ output_dir: paper/
 - [ ] 论文长度符合目标要求
 - [ ] 表格标题自解释
 - [ ] 摘要包含：问题、方法、发现、含义（各一句）
+- [ ] 每个章节有独立文件（`paper/sections/0X_*.tex`），章节内容完整，无 TODO 占位符（写作过程中的标注已替换为实际内容）
 
 ---
 

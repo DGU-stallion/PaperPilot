@@ -1,39 +1,81 @@
 {
   "skill": "integrity-auditor",
-  "description": "Evaluation cases for academic integrity auditor skill",
+  "description": "Evaluation cases for integrity-auditor v7 — aligned with skill boundary (four-level citation classification, numerical check, shared AI patterns, no auto-delete)",
   "cases": [
     {
-      "id": "audit_citation_verify",
-      "description": "Verifies citations are real papers",
+      "id": "audit_citation_four_levels",
+      "description": "Audit report must record all four citation verification levels (verified/unverified/suspicious/fabricated) — integrity-auditor is single source of truth",
       "skill": "integrity-auditor",
-      "prompt": "检查我的引用是否都是真实存在的论文",
-      "expected_checks": ["markdown_has_content"],
+      "prompt": "检查我的所有引用是否真实存在，并按验证状态分级",
+      "expected_checks": ["audit_has_verification_status", "markdown_has_content"],
       "should_trigger": true,
-      "context": {"min_chars": 50}
+      "context": {"min_chars": 100}
     },
     {
-      "id": "audit_plagiarism",
-      "description": "Checks for potential plagiarism concerns",
+      "id": "audit_numerical_consistency",
+      "description": "Audit report must include numerical consistency cross-check between abstract, body, and tables",
       "skill": "integrity-auditor",
-      "prompt": "帮我检查这段文字是否有抄袭问题",
-      "expected_checks": ["markdown_has_content"],
+      "prompt": "审查论文中的数字，检查摘要、正文和表格是否一致",
+      "expected_checks": ["audit_has_numerical_check", "markdown_has_content"],
       "should_trigger": true,
       "context": {}
     },
     {
-      "id": "audit_data_fabrication",
-      "description": "Identifies suspicious data patterns",
+      "id": "audit_ai_patterns_shared",
+      "description": "AI writing detection must reference shared patterns file, not maintain its own list",
       "skill": "integrity-auditor",
-      "prompt": "检查我的回归结果是否有数据造假嫌疑",
-      "expected_checks": ["markdown_has_content"],
+      "prompt": "检测论文中是否有明显的AI写作痕迹，按严重程度分级报告",
+      "expected_checks": ["audit_uses_shared_ai_patterns", "markdown_has_content"],
       "should_trigger": true,
       "context": {}
+    },
+    {
+      "id": "audit_no_auto_delete_citations",
+      "description": "Auditor must recommend, never auto-delete citations",
+      "skill": "integrity-auditor",
+      "prompt": "发现疑似不存在的引用后，处理该引用",
+      "expected_checks": ["audit_no_auto_delete"],
+      "should_trigger": true,
+      "context": {}
+    },
+    {
+      "id": "audit_traceability",
+      "description": "Audit checks that every table/figure has a source file",
+      "skill": "integrity-auditor",
+      "prompt": "检查论文中的每张表格和图形是否都有对应的源文件",
+      "expected_checks": ["markdown_has_content"],
+      "should_trigger": true,
+      "context": {"min_chars": 100}
+    },
+    {
+      "id": "audit_full_report",
+      "description": "Complete audit covers all four dimensions with proper boundary compliance",
+      "skill": "integrity-auditor",
+      "prompt": "对论文进行全面的学术诚信审查：引用验证、数字一致性、AI写作痕迹、数据可追溯性",
+      "expected_checks": [
+        "audit_has_verification_status",
+        "audit_has_numerical_check",
+        "audit_uses_shared_ai_patterns",
+        "audit_no_auto_delete",
+        "markdown_has_content"
+      ],
+      "should_trigger": true,
+      "context": {"min_chars": 200}
     },
     {
       "id": "audit_negative_writing",
-      "description": "Should NOT trigger for writing request",
+      "description": "Should NOT trigger for paper writing request",
       "skill": "integrity-auditor",
       "prompt": "帮我写一段研究背景的介绍",
+      "expected_checks": [],
+      "should_trigger": false,
+      "context": {}
+    },
+    {
+      "id": "audit_negative_analysis",
+      "description": "Should NOT trigger for regression analysis",
+      "skill": "integrity-auditor",
+      "prompt": "运行DID回归并输出结果表格",
       "expected_checks": [],
       "should_trigger": false,
       "context": {}

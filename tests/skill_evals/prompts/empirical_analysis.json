@@ -1,10 +1,10 @@
 {
   "skill": "empirical-analysis",
-  "description": "Evaluation cases for empirical analysis skill",
+  "description": "Evaluation cases for empirical-analysis v7 — aligned with skill boundary (parallel trend, full-sample reporting, no p-hacking)",
   "cases": [
     {
       "id": "analysis_regression_output",
-      "description": "Analysis produces regression table",
+      "description": "Analysis produces regression table with valid LaTeX",
       "skill": "empirical-analysis",
       "prompt": "运行基准回归分析：Y=就业，D=数字化指数，控制变量=企业规模、年龄、杠杆率",
       "expected_checks": ["analysis_has_regression_table", "analysis_latex_valid"],
@@ -13,7 +13,7 @@
     },
     {
       "id": "analysis_fe_did",
-      "description": "FE/DID analysis with panel data",
+      "description": "FE/DID analysis with panel data produces table",
       "skill": "empirical-analysis",
       "prompt": "使用固定效应模型分析数字化对就业的影响",
       "expected_checks": ["analysis_has_regression_table"],
@@ -21,10 +21,46 @@
       "context": {}
     },
     {
+      "id": "analysis_did_parallel_trend",
+      "description": "DID analysis must include parallel trend test — completion criterion",
+      "skill": "empirical-analysis",
+      "prompt": "用双重差分法分析政策冲击对企业创新的影响，处理组为2018年受政策影响企业",
+      "expected_checks": ["analysis_has_parallel_trend", "analysis_has_regression_table"],
+      "should_trigger": true,
+      "context": {}
+    },
+    {
+      "id": "analysis_full_sample_reported",
+      "description": "Full-sample baseline must be reported alongside any sub-sample results",
+      "skill": "empirical-analysis",
+      "prompt": "运行回归分析并报告异质性结果，按企业规模分组",
+      "expected_checks": ["analysis_has_full_sample", "analysis_has_regression_table"],
+      "should_trigger": true,
+      "context": {}
+    },
+    {
+      "id": "analysis_robustness_checks",
+      "description": "Analysis report includes robustness checks",
+      "skill": "empirical-analysis",
+      "prompt": "对基准回归进行稳健性检验",
+      "expected_checks": ["analysis_has_regression_table", "markdown_has_content"],
+      "should_trigger": true,
+      "context": {"min_chars": 200}
+    },
+    {
       "id": "analysis_negative_writing",
       "description": "Should NOT trigger for paper writing",
       "skill": "empirical-analysis",
       "prompt": "帮我写论文的引言部分",
+      "expected_checks": [],
+      "should_trigger": false,
+      "context": {}
+    },
+    {
+      "id": "analysis_negative_data",
+      "description": "Should NOT trigger for data collection",
+      "skill": "empirical-analysis",
+      "prompt": "帮我下载省级面板数据",
       "expected_checks": [],
       "should_trigger": false,
       "context": {}

@@ -17,6 +17,13 @@ output_dir: literature/
 
 # Literature Survey
 
+## 职责边界
+
+**入口条件**：研究方案已确定（`00_research_proposal.md` 存在）。  
+**产出**：`literature/01_literature_review.md` + 可选 `references.bib`。  
+**出口条件**：每条引用有验证状态，核心论文4-6篇已标注选取理由，研究空白已识别。  
+**不负责**：PDF 下载执行细节（→ web-access）、引用深度验证（→ integrity-auditor）。
+
 ## 角色
 
 严谨的文献调研助手。每一条引用必须来自实际检索，绝不凭空生成，论文标题必须完整准确。
@@ -71,17 +78,15 @@ Step 3: 补充搜索
 | 搜索目标 | 首选工具 | 备选 | 说明 |
 |---------|---------|------|------|
 | 精确查找已知论文（有标题/作者/DOI） | CrossRef (`search_crossref`) | OpenAlex | 结构化元数据最完整，命中率最高 |
-| 模糊主题探索 | Semantic Scholar (`search_semantic`) | Google Scholar | 语义相关性好 |
+| 模糊主题探索 | Semantic Scholar (`search_semantic`) | Google Scholar | 语义相关性好 (可能限流，超时时降级为 CrossRef) |
 | 引用/关联扩展 | Semantic Scholar | — | 获取参考文献列表和被引列表 |
-| 发现 OA/预印本 PDF 链接 | Tavily (`tavily_search`) | — | 能找到机构仓库、教学网站上的非标 OA 版本 |
+| 发现 OA/预印本 PDF 链接 | Tavily (`tavily_search`) | — | 补充 OA 链接发现 |
 | 中文学术论文 | Tavily (`site:cnki.net` / `site:wanfang.com`) | — | WebSearch + WebFetch 访问中文数据库 |
 | 元数据权威验证 | CrossRef (`get_crossref_paper_by_doi`) | — | 所有论文的 DOI/卷期页/出版商以 CrossRef 为准 |
 
 **元数据验证规则**：搜索到候选论文后，用 `get_crossref_paper_by_doi(DOI)` 核实元数据（标题、作者、年份、期刊），确认无误后再进入下载流程。CrossRef 是元数据权威源。
 
 **中文文献说明**：如 web-access 无法自动获取知网全文，标记为"需用户在知网补充"并给出具体搜索词。如已安装 cnki-mcp，优先使用。
-
-**Semantic Scholar 不稳定说明**：Semantic Scholar API 存在限流和超时问题。如果连续超时，降级为 CrossRef + Google Scholar 组合。
 
 ### 搜索执行
 
@@ -92,12 +97,10 @@ Step 3: 补充搜索
    排序依据：被引量 + 期刊层级
 
 2. 关键词搜索（中文）
-   web-access: tavily_search("site:cnki.net {关键词}") / "site:wanfang.com {关键词}"
-   WebFetch 提取标题、作者、期刊、被引量
+   web-access: tavily_search("site:cnki.net {关键词}") — 提取标题、作者、期刊、被引量
 
 3. 锚点扩展（对每篇锚点论文）
-   paper-search-mcp: search_semantic(query="{title}", max_results=20) → 从结果中识别引用关系
-   注：Semantic Scholar 超时时降级为 CrossRef 按作者+年份补充搜索
+   锚点扩展: search_semantic("{title}") — 识别引用关系；超时时降级为 CrossRef 按作者补充
 
 4. 元数据确认
    对所有纳入论文: get_crossref_paper_by_doi(DOI) → 核实标题/作者/年份/期刊
@@ -216,13 +219,7 @@ PDF 下载到 literature/pdfs/ 目录。
 - 单个镜像连续 3 次失败 → 本次会话内跳过该镜像
 - **重试规则**：如果所有镜像首轮全部失败，等待 10 秒后进行一次完整重试（Sci-Hub 节点存在瞬时不可用的情况，实测同一 DOI 前一次失败后一次可成功）
 
-**Tavily 搜索 PDF 策略（渠道 3 详细说明）**：
-- 搜索词：`"{完整标题}" filetype:pdf` 或 `"{第一作者} {年份} {关键词} PDF"`
-- 可信域名优先：`*.edu`、`*.ac.*`、`researchgate.net`、`ssrn.com`、`hdl.handle.net`、DSpace 仓库
-- 排除明显不是原论文的引用页面
-- **同名词干扰防护**：当作者姓名为常见英文词（如 Sturgeon=鲟鱼、Fisher、Bird 等）时，搜索词必须以 DOI 或期刊名限定，而非依赖姓名：
-  - 好：`"10.1002/gsj.1364" PDF` 或 `"Global Strategy Journal" "Upgrading strategies for the digital economy"`
-  - 坏：`Sturgeon 2021 "Upgrading strategies" PDF`（会被同名动物/地名淹没）
+Tavily 搜索 PDF 的执行策略见 `skills/web-access/SKILL.md` — web-access 负责渠道选择和同名干扰防护。
 
 **阶段二：失败兜底**
 - 所有渠道均失败 → 标记为 `[需手动下载]`，给出 DOI 链接 + 建议下载途径（校内数据库/出版商页面）

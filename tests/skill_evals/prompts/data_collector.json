@@ -1,10 +1,10 @@
 {
   "skill": "data-collector",
-  "description": "Evaluation cases for data collector skill",
+  "description": "Evaluation cases for data-collector v7 — aligned with skill boundary (mode declaration, triangle verification, no exec details)",
   "cases": [
     {
       "id": "data_source_documented",
-      "description": "Data acquisition documents the source",
+      "description": "Report documents data source",
       "skill": "data-collector",
       "prompt": "帮我获取中国省级数字经济发展数据",
       "expected_checks": ["data_has_source", "markdown_has_content"],
@@ -13,7 +13,7 @@
     },
     {
       "id": "data_variables_defined",
-      "description": "Data output defines key variables",
+      "description": "Report defines key variables",
       "skill": "data-collector",
       "prompt": "搜集制造业企业数字化转型和就业数据",
       "expected_checks": ["data_has_variables"],
@@ -21,10 +21,55 @@
       "context": {"required_vars": ["就业", "数字化", "企业"]}
     },
     {
+      "id": "data_mode_declared_case",
+      "description": "Report declares collection mode for case study",
+      "skill": "data-collector",
+      "prompt": "为新易盛案例研究搜集多源证据：年报、行业数据、政策文本",
+      "expected_checks": ["data_mode_declared", "markdown_has_content"],
+      "should_trigger": true,
+      "context": {"min_chars": 200}
+    },
+    {
+      "id": "data_mode_declared_panel",
+      "description": "Report declares panel data mode for quantitative study",
+      "skill": "data-collector",
+      "prompt": "搜集中国省级面板数据，用于DID回归分析",
+      "expected_checks": ["data_mode_declared", "data_has_source"],
+      "should_trigger": true,
+      "context": {}
+    },
+    {
+      "id": "data_triangle_verification",
+      "description": "Case evidence output has triangle-verification status markers",
+      "skill": "data-collector",
+      "prompt": "搜集新易盛2022年收购Alpine的相关证据，需要多源验证",
+      "expected_checks": ["data_has_triangle_verification"],
+      "should_trigger": true,
+      "context": {}
+    },
+    {
+      "id": "data_no_exec_details",
+      "description": "Report must not contain web-execution details (boundary: delegate to web-access)",
+      "skill": "data-collector",
+      "prompt": "搜集新易盛所有公开财务数据并下载年报PDF",
+      "expected_checks": ["data_no_exec_details"],
+      "should_trigger": true,
+      "context": {}
+    },
+    {
       "id": "data_negative_literature",
       "description": "Should NOT trigger for literature search",
       "skill": "data-collector",
       "prompt": "帮我搜索数字经济相关论文",
+      "expected_checks": [],
+      "should_trigger": false,
+      "context": {}
+    },
+    {
+      "id": "data_negative_regression",
+      "description": "Should NOT trigger for regression analysis",
+      "skill": "data-collector",
+      "prompt": "运行基准回归分析",
       "expected_checks": [],
       "should_trigger": false,
       "context": {}

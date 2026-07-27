@@ -1,6 +1,6 @@
 {
   "skill": "paper-writer",
-  "description": "Evaluation cases for paper writer skill",
+  "description": "Evaluation cases for paper-writer v7 — aligned with skill boundary (no AI patterns, traceable numbers, no placeholders)",
   "cases": [
     {
       "id": "paper_has_all_sections",
@@ -13,12 +13,30 @@
     },
     {
       "id": "paper_no_placeholders",
-      "description": "Paper has no placeholder text",
+      "description": "Paper has no placeholder text — out-criterion: no TODO before marking complete",
       "skill": "paper-writer",
       "prompt": "完成论文草稿，不要留任何待补充内容",
       "expected_checks": ["paper_no_placeholders", "markdown_has_content"],
       "should_trigger": true,
       "context": {"min_chars": 1000}
+    },
+    {
+      "id": "paper_no_ai_patterns",
+      "description": "Paper avoids high-frequency AI writing patterns (preventive — paper-writer's boundary)",
+      "skill": "paper-writer",
+      "prompt": "写论文引言部分，注意避免AI写作痕迹",
+      "expected_checks": ["paper_no_ai_patterns", "markdown_has_content"],
+      "should_trigger": true,
+      "context": {"min_chars": 300, "threshold_fail": 8, "threshold_warn": 3}
+    },
+    {
+      "id": "paper_numbers_traceable",
+      "description": "Paper must reference analysis/output files for numbers, not self-generate coefficients",
+      "skill": "paper-writer",
+      "prompt": "写实证结果章节，引用回归表格中的系数",
+      "expected_checks": ["paper_numbers_traceable"],
+      "should_trigger": true,
+      "context": {}
     },
     {
       "id": "paper_introduction",
@@ -34,6 +52,15 @@
       "description": "Should NOT trigger for regression analysis",
       "skill": "paper-writer",
       "prompt": "运行稳健性检验回归",
+      "expected_checks": [],
+      "should_trigger": false,
+      "context": {}
+    },
+    {
+      "id": "paper_negative_audit",
+      "description": "Should NOT trigger for integrity audit (deep AI diagnosis belongs to integrity-auditor)",
+      "skill": "paper-writer",
+      "prompt": "对论文进行完整的学术诚信审查并验证所有引用",
       "expected_checks": [],
       "should_trigger": false,
       "context": {}
