@@ -249,12 +249,12 @@ papers/<project>/<skill-output-dir>/
 ```
 
 映射：
-- topic-explorer → `topics/`
-- literature-survey → `literature/`
-- data-collector → `data/`
-- empirical-analysis → `analysis/`
+- topic-explorer → `topics/` → 主输出：`00_research_proposal.md`
+- literature-survey → `literature/` → 主输出：`01_literature_review.md`
+- data-collector → `data/` → 主输出：`02_data_report.md`
+- empirical-analysis → `analysis/` → 主输出：`03_analysis_report.md`
 - paper-writer → `paper/`
-- integrity-auditor → `audit/`
+- integrity-auditor → `audit/` → 主输出：`04_audit_report.md`
 
 用户画像：`papers/<project>/researcher_profile.json`
 

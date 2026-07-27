@@ -37,7 +37,7 @@ optional: true
 
 1. 读取 `researcher_profile.json` 了解用户计量水平
 2. 读取 `topics/00_research_proposal.md` 获取识别策略和变量
-3. 读取 `data/01_validation_report.md` 了解数据特征
+3. 读取 `data/02_data_report.md` 了解数据特征
 4. 确认模型设定：
 
 ```
@@ -228,21 +228,19 @@ optional: true
 ### 文件
 
 ```
-papers/<project>/analysis/output/00_descriptive.tex     — 描述性统计表
-papers/<project>/analysis/output/01_correlation.tex     — 相关系数矩阵
-papers/<project>/analysis/output/02_baseline.tex        — 基准回归表
-papers/<project>/analysis/output/03_robustness.tex      — 稳健性检验表
-papers/<project>/analysis/output/04_heterogeneity.tex   — 异质性分析表
-papers/<project>/analysis/output/05_mechanism.tex       — 机制分析表（如有）
-papers/<project>/analysis/scripts/                      — 可复现分析脚本
+papers/<project>/analysis/output/                     ← 所有表格和图（按语义命名，如 baseline_regression.tex、fig_event_study.pdf）
+papers/<project>/analysis/scripts/                    ← 可复现分析脚本（按步骤编号，如 01_descriptive.py）
+papers/<project>/analysis/03_analysis_report.md       ← 分析总结报告（主输出，编号 03_）
 ```
+
+**命名规则**：每个项目只输出一个 md 文件，编号 `03_` 代表实证分析阶段，固定放在 `analysis/` 目录根部。`output/` 下的表格和图按语义命名（`baseline_regression.tex`、`robustness.tex`、`heterogeneity.tex`、`fig_event_study.pdf` 等），不使用数字前缀。不得在 `analysis/` 根部或 `output/` 下创建其他 md 文件。
 
 ### Agent Guide 输出
 
 ```json
 {
   "completed": "empirical-analysis",
-  "artifacts": ["analysis/output/02_baseline.tex", "analysis/output/03_robustness.tex"],
+  "artifacts": ["analysis/output/baseline_regression.tex", "analysis/output/robustness.tex", "analysis/03_analysis_report.md"],
   "context_written": ["baseline", "robustness_results", "heterogeneity"],
   "key_finding": "D 对 Y 有显著正向影响，系数 X (p<0.01)，经济含义为...",
   "next_steps": [

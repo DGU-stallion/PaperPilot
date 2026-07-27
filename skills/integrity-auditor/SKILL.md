@@ -121,8 +121,8 @@ Fallback（paper-search-mcp 不可用时）：
 检查: 论文中每张表/图是否有对应的源文件
 
 对照表:
-  论文 Table 1 ← analysis/output/00_descriptive.tex ✓
-  论文 Table 2 ← analysis/output/02_baseline.tex ✓
+  论文 Table 1 ← analysis/output/descriptive.tex ✓
+  论文 Table 2 ← analysis/output/baseline_regression.tex ✓
   论文 Figure 1 ← analysis/output/fig1_xxx.pdf ✓
   论文 Table 5 ← ??? [无对应文件] ✗
 
@@ -160,11 +160,13 @@ Fallback（paper-search-mcp 不可用时）：
 ### 文件
 
 ```
-papers/<project>/audit/citation_verification.json   — 每条引用的验证结果
-papers/<project>/audit/integrity_report.md          — 完整审查报告
+papers/<project>/audit/citation_verification.json   — 每条引用的验证结果（附属文件，按语义命名）
+papers/<project>/audit/04_audit_report.md           — 完整审查报告（主输出，编号 04_）
 ```
 
-### 审查报告结构
+**命名规则**：每个项目只输出一个 md 文件，编号 `04_` 代表学术审查阶段，固定放在 `audit/` 目录根部。`citation_verification.json` 是非 md 附属文件，命名固定。
+
+### 审查报告结构（`04_audit_report.md`）
 
 ```markdown
 # 学术诚信审查报告
@@ -191,7 +193,7 @@ papers/<project>/audit/integrity_report.md          — 完整审查报告
 ```json
 {
   "completed": "integrity-auditor",
-  "artifacts": ["audit/integrity_report.md", "audit/citation_verification.json"],
+  "artifacts": ["audit/04_audit_report.md", "audit/citation_verification.json"],
   "context_written": ["audit_report"],
   "summary": {
     "citations_total": 42,
@@ -218,7 +220,7 @@ papers/<project>/audit/integrity_report.md          — 完整审查报告
 ```
 ✅ 审查完成
 
-📄 审查报告已生成: audit/integrity_report.md
+📄 审查报告已生成: audit/04_audit_report.md
 
 📊 结果概要:
   - 引用: [38/42 验证通过] [1 条可疑] [1 条疑似不存在]

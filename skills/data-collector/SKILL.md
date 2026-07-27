@@ -144,7 +144,7 @@ Step 2: 行业与市场数据
 
 Step 3: 政策文本
   - 政策全文 → WebFetch访问政府网站 → 存入data/raw/
-  - 政策时间线 → 整理到data_report.md
+  - 政策时间线 → 整理到 02_data_report.md
 
 Step 4: 媒体与第三方
   - 深度报道 → WebFetch获取全文
@@ -208,26 +208,28 @@ Step 4: 媒体与第三方
 
 **面板数据模式：**
 ```
-data/raw/                    ← 原始数据
-data/clean/panel_clean.csv   ← 清洗后数据
-data/scripts/01_clean.py     ← 清洗脚本
-data/data_report.md          ← 数据来源与质量报告
+data/raw/                    ← 原始数据（按语义命名，如 nbs_provincial_2011_2023.xlsx）
+data/clean/panel_clean.csv   ← 清洗后数据（命名固定）
+data/scripts/01_clean.py     ← 清洗脚本（按步骤编号）
+data/02_data_report.md       ← 数据来源与质量报告（主输出，编号 02_）
 ```
 
 **案例证据模式：**
 ```
-data/raw/                    ← 原始素材（年报PDF、截图等）
-data/clean/                  ← 整理后的结构化数据
-data/scripts/                ← 数据处理脚本（如有）
-data/data_report.md          ← 证据来源与验证报告（含事件时间线）
+data/raw/                    ← 原始素材（按来源语义命名，如 annual_report_2023.pdf）
+data/clean/                  ← 整理后的结构化数据（按语义命名）
+data/scripts/                ← 数据处理脚本（如有，按步骤编号）
+data/02_data_report.md       ← 证据来源与验证报告（主输出，编号 02_，含事件时间线）
 ```
 
 **质性素材/资料汇编模式：**
 ```
-data/raw/                    ← 原始语料/资料
-data/clean/                  ← 整理后的素材
-data/data_report.md          ← 素材来源与筛选说明
+data/raw/                    ← 原始语料/资料（按语义命名）
+data/clean/                  ← 整理后的素材（按语义命名）
+data/02_data_report.md       ← 素材来源与筛选说明（主输出，编号 02_）
 ```
+
+**命名规则**：每个项目只输出一个 md 文件，编号 `02_` 代表数据搜集阶段，固定放在 `data/` 目录根部。非 md 附属文件（数据文件、脚本）按语义命名，不使用编号前缀。
 
 ### Agent Guide 输出
 
@@ -235,7 +237,7 @@ data/data_report.md          ← 素材来源与筛选说明
 {
   "completed": "data-collector",
   "mode": "case_evidence | panel_data | qualitative | descriptive",
-  "artifacts": ["data/clean/...", "data/data_report.md"],
+  "artifacts": ["data/clean/...", "data/02_data_report.md"],
   "context_written": ["clean_data_path", "data_quality_report"],
   "next_steps": [...],
   "warnings": []

@@ -335,6 +335,8 @@ output_dir: topics/
 papers/<project>/topics/00_research_proposal.md
 ```
 
+**命名规则**：每个项目只输出这一个 md 文件，编号 `00_` 代表选题阶段。不得在 `topics/` 下创建其他 md 文件（中间过程记录在对话中，不落文件）。
+
 该文件包含：
 
 1. **研究问题**（解释性，一句话）
