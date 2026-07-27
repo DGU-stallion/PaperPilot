@@ -1,5 +1,8 @@
 # PaperPilot — Skill Manifest
 
+> **受众**：本文件供配置和安装 PaperPilot 的开发者/用户阅读，提供技能包的版本元数据、安装方式和技术协议。  
+> **运行时 agent 行为规范**：见根目录 `AGENTS.md`。
+
 **Version:** 6.0.0a1 (source of truth: `scripts/__init__.__version__`)  
 **Type:** Skills package (multi-skill)  
 **Protocol:** CLI (`pp`) + JSON over stdout  
@@ -9,7 +12,7 @@
 
 | Skill | Path | Optional |
 |-------|------|----------|
-| paper-agent | `skills/paper-agent/SKILL.md` | No (meta-skill) |
+| paperpilot | `AGENTS.md` (root) | No (meta-skill) |
 | web-access | `skills/web-access/SKILL.md` | No (base capability) |
 | topic-explorer | `skills/topic-explorer/SKILL.md` | No |
 | literature-survey | `skills/literature-survey/SKILL.md` | No |
@@ -23,7 +26,7 @@
 Any coding agent that reads markdown skill files can load PaperPilot:
 
 1. Clone this repository
-2. Read `CLAUDE.md` (agent behavior rules) or `skills/paper-agent/SKILL.md` (meta-skill protocol)
+2. Read `AGENTS.md` (meta-skill + agent behavior rules) — Claude Code users: `CLAUDE.md` imports it automatically
 3. The agent becomes a PaperPilot-powered research assistant
 
 ## CLI Protocol
@@ -60,4 +63,4 @@ Every skill returns after completion:
 }
 ```
 
-The meta-skill (paper-agent) uses this to recommend the next action.
+The meta-skill (paperpilot) uses this to recommend the next action.
