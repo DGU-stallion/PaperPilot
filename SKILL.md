@@ -15,7 +15,8 @@
 | paperpilot | `AGENTS.md` (root) | No (meta-skill) |
 | web-access | `skills/web-access/SKILL.md` | No (base capability) |
 | topic-explorer | `skills/topic-explorer/SKILL.md` | No |
-| literature-survey | `skills/literature-survey/SKILL.md` | No |
+| paper-search | `skills/paper-search/SKILL.md` | No |
+| literature-review | `skills/literature-review/SKILL.md` | No |
 | data-collector | `skills/data-collector/SKILL.md` | No |
 | empirical-analysis | `skills/empirical-analysis/SKILL.md` | Yes (requires `pip install paperpilot[standard]`) |
 | paper-writer | `skills/paper-writer/SKILL.md` | No |

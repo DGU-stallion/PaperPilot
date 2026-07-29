@@ -14,7 +14,7 @@
 
 ### A2：Retrospective 触发回流
 **前置**：`00_research_proposal.md` + `01_literature_review.md` 均存在，文献报告显示核心理论与研究方案不一致  
-**输入**：literature-survey 完成后的 Agent Guide 输出  
+**输入**：paper-search 完成后的 Agent Guide 输出  
 **预期行为**：paperpilot 输出 `🔄 发现需要回流`，列出触发来源和影响范围，询问是否立即修订  
 **完成条件**：用户选 N 时，`00_research_proposal.md` 修订记录表新增一行，状态为"待处理"；用户选 Y 时，文件被修改且修订记录更新
 
@@ -60,25 +60,25 @@
 
 ---
 
-## literature-survey
+## paper-search
 
 ### L1：关键词来源验证
 **前置**：`topics/00_research_proposal.md` 存在  
-**输入**：开始文献调研  
+**输入**：开始文献搜索  
 **预期行为**：搜索关键词从研究方案中提取，不自行构造  
-**完成条件**：`01_literature_review.md` 的"搜索策略"节注明"关键词来源：00_research_proposal.md"，关键词与研究方案中的核心概念一致
+**完成条件**：`00_paper_search.md` 的"搜索策略"节注明"关键词来源：00_research_proposal.md"，关键词与研究方案中的核心概念一致
 
 ### L2：锚点扩展验证
 **前置**：找到第一篇锚点论文  
-**输入**：继续文献调研  
+**输入**：继续文献搜索  
 **预期行为**：对每篇锚点论文执行参考文献扩展，候选池在锚点基础上增加  
-**完成条件**：`01_literature_review.md` 的搜索漏斗数据中，扩展论文数 > 0（"含滚雪球扩展 Y 篇"字段）
+**完成条件**：`00_paper_search.md` 的搜索漏斗数据中，扩展论文数 > 0（"含锚点扩展 Y 篇"字段）
 
 ### L3：高度相似论文处理
 **前置**：搜索发现已有论文使用相同理论框架+相同案例  
 **输入**：搜索结果包含竞争论文  
 **预期行为**：立即向用户报告，分析差异点，不继续推进直到用户确认差异化定位  
-**完成条件**：`01_literature_review.md` 的"研究空白"节有竞争论文的分析，以及本研究的差异化说明
+**完成条件**：`00_paper_search.md` 的"研究空白初判"节有竞争论文的分析，以及本研究的差异化说明
 
 ### L4：下载后验证
 **前置**：用户选择下载 PDF  
@@ -191,7 +191,7 @@
 ## 跨 skill 边界测试
 
 ### X1：web-access 职责不越界
-**验证方法**：检查 data-collector 和 literature-survey 的完成输出，确认其中无 curl 命令、无具体镜像 URL、无 Tavily 同名词干防护逻辑  
+**验证方法**：检查 data-collector 和 paper-search 的完成输出，确认其中无 curl 命令、无具体镜像 URL、无 Tavily 同名词干防护逻辑  
 **完成条件**：上述执行细节只出现在 web-access/SKILL.md 中
 
 ### X2：AI 写作检测 single source of truth
@@ -199,5 +199,5 @@
 **完成条件**：`grep -r "值得注意的是\|It is worth noting" skills/paper-writer/ skills/integrity-auditor/` 结果为空
 
 ### X3：引用验证 single source of truth
-**验证方法**：literature-survey 的"引用验证"只做搜索时同步验证（双源交叉），详细四级分类（verified/unverified/suspicious/fabricated）只在 integrity-auditor 中定义  
-**完成条件**：integrity-auditor 中的四级分类是权威定义，literature-survey 中无独立的四级分类表
+**验证方法**：paper-search 的"引用验证"只做搜索时同步验证（双源交叉），详细四级分类（verified/unverified/suspicious/fabricated）只在 integrity-auditor 中定义  
+**完成条件**：integrity-auditor 中的四级分类是权威定义，paper-search 中无独立的四级分类表

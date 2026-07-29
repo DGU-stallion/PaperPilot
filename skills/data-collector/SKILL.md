@@ -1,12 +1,7 @@
 ---
 name: data-collector
-description: Locate, acquire, organize, and validate research data and evidence. Adapts to research design type — quantitative panel, case study, qualitative, or descriptive.
-version: 7.0.0
-triggers:
-  - "帮我找数据"
-  - "收集资料"
-  - "collect data"
-  - "数据搜集"
+description: Evidence collection — use when the user wants to locate data sources, collect case evidence, validate data availability, clean datasets, or organize non-academic research materials. Looks for variable requirements and research object in 00_research_proposal.md; asks user if absent.
+version: 8.0.0
 produces:
   - data/02_data_report.md
 output_dir: data/
@@ -16,17 +11,31 @@ output_dir: data/
 
 ## 职责边界
 
-**入口条件**：研究方案已确定（`00_research_proposal.md` 存在），需要搜集支撑证据。  
+**所需信息**：需要什么变量/证据 + 研究对象 + 数据用途。  
 **产出**：`data/02_data_report.md`（证据来源报告）+ 原始数据文件（`data/raw/`）+ 清洗结果（`data/clean/`）。  
-**出口条件**：Through-line 每个关键环节都有对应的可用证据/变量，来源已记录，关键数据 ≥2 源验证。  
-**不负责**：联网操作执行细节（→ web-access）、回归分析（→ empirical-analysis）。
+**完成标准**：研究计划书中每个子问题/因果链环节都有对应的可用证据/变量，来源已记录，关键数据 ≥2 源验证。  
+**不做**：联网操作执行细节（→ web-access）、回归分析（→ empirical-analysis）、学术文献搜集（→ paper-search）。
+
+**材料范围**：收录所有不能进入论文参考文献列表的材料——企业年报/季报/公告、券商研报/行业分析报告、新闻报道/媒体专访、行业数据（LightCounting、Yole 等）、投资者互动平台记录、政府政策文件（非学术出版）等。这些材料在论文中以脚注/数据来源注释形式出现。
 
 ---
 
-## 进入流程
+## Step 1 — 收集所需信息
 
-1. 读取 `00_research_proposal.md`，识别：研究类型、关键变量/证据需求、研究对象
-2. 判断研究类型，声明搜集模式：
+查找顺序：
+1. 读取 `papers/<project>/topics/00_research_proposal.md`，识别：研究类型、关键变量/证据需求、研究对象
+2. 读取对话中用户已提供的数据说明或已有材料
+3. 仍缺失时，向用户追问——一次只问一个问题：
+   - "你要找什么数据/证据？用来验证什么？"
+   - （确认后）"已经有哪些数据？需要搜集的是哪部分？"
+
+**完成标准**：研究类型已判断，需要搜集的变量/证据清单已确认。
+
+---
+
+## Step 2 — 声明搜集模式
+
+根据研究类型选择模式，告知用户：
 
 | 研究类型 | 搜集模式 | 核心产出 |
 |---------|---------|---------|
@@ -35,13 +44,13 @@ output_dir: data/
 | 质性研究 | 质性素材模式 | 文本语料库 |
 | 描述/政策分析 | 资料汇编模式 | 结构化资料集 |
 
-3. 向用户确认：目标变量/证据清单，已有素材，需要搜集的部分
-
 ---
 
-## 模式一：面板数据模式
+## Step 3 — 执行搜集
 
-**搜集意图声明**（交 web-access 执行）：
+### 面板数据模式
+
+搜索意图声明（交 web-access 执行）：
 
 ```
 搜索意图: 数据源定位 + 文件获取
@@ -51,7 +60,7 @@ output_dir: data/
 失败降级: 公开源不可得 → 标记"需用户从付费数据库导出"并给操作步骤
 ```
 
-**清洗流程**（本 skill 执行，需 Python 可用）：
+清洗流程（本 skill 执行，需 Python 可用）：
 
 ```
 原始数据 → 格式识别 → 变量筛选 → 类型转换
@@ -64,23 +73,19 @@ output_dir: data/
 
 清洗脚本保存为 `data/scripts/01_clean.py`，可一键复现；原始数据在 `data/raw/` 不改动。
 
----
+### 案例证据模式
 
-## 模式二：案例证据模式
-
-**搜集意图声明**（交 web-access 执行）：
+搜索意图声明（交 web-access 执行）：
 
 ```
 搜索意图: 多源证据获取（企业财报 + 行业数据 + 政策文本 + 媒体报道）
 成功标准: 各类证据实际下载/提取到 data/raw/，核心事实有 ≥2 源交叉验证
 优先源: 巨潮资讯网（年报）/ 东方财富（财务数据）/ 政府官网（政策）/ 权威媒体
-输出要求: PDF 下载到 data/raw/，结构化数据存 data/clean/，文本内容存 data/raw/
+输出要求: PDF 下载到 data/raw/，结构化数据存 data/clean/
 失败降级: 需登录/付费 → 标记"需用户手动获取"并给具体操作步骤
 ```
 
-**证据三角验证**（本 skill 执行）：
-
-同一事实须有 ≥2 个独立来源确认（Yin, 2018）。
+证据三角验证（本 skill 执行）——同一事实须有 ≥2 个独立来源确认（Yin, 2018）：
 
 | 证据类型 | 来源A | 来源B |
 |---------|-------|-------|
@@ -89,7 +94,7 @@ output_dir: data/
 | 技术进展 | 产品发布/专利 | 行业评测 |
 | 市场地位 | 第三方排名 | 营收数据计算 |
 
-**事件时间线**（本 skill 输出）：
+事件时间线输出格式：
 
 ```markdown
 | 时间 | 事件 | 类别 | 来源 | 验证状态 |
@@ -97,21 +102,19 @@ output_dir: data/
 | 2022.03 | 收购Alpine获取硅光技术 | 战略决策 | 公司公告 | ✓ 双源 |
 ```
 
----
-
-## 模式三：质性素材模式
+### 质性素材模式
 
 确认语料范围（来源、时间、筛选标准）和预期规模后执行：
 
 确定语料边界 → 系统搜集（web-access）→ 格式统一 → 编码框架初建 → 预编码验证
 
----
-
-## 模式四：资料汇编模式
+### 资料汇编模式
 
 确认资料清单（统计数据、政策文本、行业报告等）后执行：
 
 明确资料清单 → 分类搜集（web-access）→ 结构化整理 → 关键数据图表化
+
+**完成标准**：所有目标数据/证据已搜集，来源有记录，核心事实已交叉验证。
 
 ---
 

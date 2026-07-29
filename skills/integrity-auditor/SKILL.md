@@ -1,16 +1,9 @@
 ---
 name: integrity-auditor
-description: Multi-dimensional research integrity audit — citation verification via paper-search-mcp, numerical consistency checks, AI writing pattern detection, and data-to-paper traceability.
-version: 6.0.0a1
-triggers:
-  - "检查引用"
-  - "审查论文"
-  - "verify citations"
-  - "integrity check"
-  - "查重"
-consumes: []
+description: Integrity audit — use when the user wants to verify citations, check that numbers in the paper match analysis output, detect AI writing patterns, or audit data-to-paper traceability. Looks for paper file at paper/main.tex; asks user for path if absent.
+version: 7.0.0
 produces:
-  - audit_report
+  - audit/04_audit_report.md
 output_dir: audit/
 ---
 
@@ -18,20 +11,25 @@ output_dir: audit/
 
 ## 职责边界
 
-**入口条件**：论文初稿存在（`paper/main.tex` 或等效文件），`references.bib` 存在。  
+**所需信息**：论文文件路径。  
 **产出**：`audit/04_audit_report.md` + `audit/citation_verification.json`。  
-**出口条件**：所有引用有验证状态，数字一致性全部核查，AI写作模式已扫描全文。  
-**不负责**：引用搜索执行（→ paper-search-mcp via web-access）、论文修改（→ paper-writer）。
-
-## 角色
-
-你是一位学术诚信审查员。你的工作是验证论文中的引用真实性、数字一致性和写作质量，帮助研究者在投稿前发现和修复问题。你不评判研究本身的价值，只检查诚信和一致性。
+**完成标准**：所有引用有验证状态，数字一致性全部核查，AI写作模式已扫描全文。  
+**不做**：引用搜索执行（→ paper-search-mcp via web-access）、论文修改（→ paper-writer）。
 
 ---
 
-## 对话策略
+## Step 1 — 收集所需信息
 
-### 进入本阶段时
+查找顺序：
+1. 读取 `papers/<project>/paper/main.tex`（如存在）
+2. 用户在对话中提供了其他路径或上传了论文文件
+3. 仍缺失时，向用户追问："论文文件在哪里？提供路径或上传文件即可。"
+
+同时检查以下文件（如存在则用于对照验证）：
+- `papers/<project>/literature/references.bib` — 引用核对
+- `papers/<project>/analysis/output/` — 数字一致性核对
+
+**完成标准**：论文文件已找到，告知用户将检查的维度和数量。
 
 ```
 "我将对论文进行以下维度的审查：
@@ -43,19 +41,11 @@ output_dir: audit/
 预计检查 [X] 条引用和 [Y] 张表格。开始？"
 ```
 
-### 发现问题时
-
-- 每发现一个问题立即记录，不等全部检查完再说
-- 严重问题（如引用不存在）立即告知用户
-- 汇总时按严重程度排序
-
 ---
 
-## 审查维度
+## Step 2 — 引用验证
 
-### 维度 1: 引用验证
-
-**使用 paper-search-mcp（首选）验证每条 BibTeX 引用。**
+使用 paper-search-mcp 验证每条 BibTeX 引用：
 
 ```
 验证流程（每条引用）:
@@ -80,7 +70,13 @@ Fallback（paper-search-mcp 不可用时）：
 - WebFetch 访问 DOI 链接验证
 - 标记为 "manual_verification_needed"
 
-### 维度 2: 数字一致性
+发现问题时立即记录，不等全部检查完再说。严重问题（如引用不存在）立即告知用户。
+
+**完成标准**：所有 BibTeX 条目已逐一验证并有状态标注。
+
+---
+
+## Step 3 — 数字一致性
 
 ```
 检查项:
@@ -97,7 +93,11 @@ Fallback（paper-search-mcp 不可用时）：
 - 描述性统计的变量范围与实证不一致
 ```
 
-### 维度 3: AI 写作模式检测
+**完成标准**：摘要/正文/表格的数字一致性已全部核查，不一致处已记录。
+
+---
+
+## Step 4 — AI 写作模式检测
 
 加载 `skills/shared/ai-writing-patterns.md`，对全文逐节扫描每种模式。
 
@@ -106,7 +106,11 @@ Fallback（paper-search-mcp 不可用时）：
 - 对照 patterns 文件给出修改建议
 - 按 patterns 文件中的严重程度分级标注
 
-### 维度 4: 数据可追溯性
+**完成标准**：全文已扫描，所有 AI 写作模式发现已记录并有修改建议。
+
+---
+
+## Step 5 — 数据可追溯性
 
 ```
 检查: 论文中每张表/图是否有对应的源文件
@@ -120,13 +124,15 @@ Fallback（paper-search-mcp 不可用时）：
 发现无源文件的表/图时: 标记为 "source_missing"
 ```
 
+**完成标准**：每张表/图的来源核查完毕，无源文件的已标注。
+
 ---
 
 ## 证据分级
 
 | 等级 | 含义 | 处理建议 |
 |------|------|---------|
-| verified | 通过 API 验证——标题、作者、年份均匹配 | 无需处理 |
+| verified | 标题、作者、年份均匹配 | 无需处理 |
 | unverified | 无法确认（API 超时/未找到）但不一定假 | 建议用户手动确认 |
 | suspicious | 部分匹配但有出入（如年份差1年） | 用户必须确认并修正 |
 | fabricated | 所有数据库均找不到任何匹配 | 必须删除或替换 |
@@ -134,8 +140,6 @@ Fallback（paper-search-mcp 不可用时）：
 ---
 
 ## 质量 Checklist
-
-审查完成后确认：
 
 - [ ] 所有 BibTeX 条目已逐一验证
 - [ ] 数字一致性检查覆盖了摘要、正文、表格
@@ -148,14 +152,12 @@ Fallback（paper-search-mcp 不可用时）：
 
 ## 输出
 
-### 文件
-
 ```
-papers/<project>/audit/citation_verification.json   — 每条引用的验证结果（附属文件，按语义命名）
-papers/<project>/audit/04_audit_report.md           — 完整审查报告（主输出，编号 04_）
+papers/<project>/audit/citation_verification.json   — 每条引用的验证结果
+papers/<project>/audit/04_audit_report.md           — 完整审查报告（主输出）
 ```
 
-**命名规则**：每个项目只输出一个 md 文件，编号 `04_` 代表学术审查阶段，固定放在 `audit/` 目录根部。`citation_verification.json` 是非 md 附属文件，命名固定。
+**命名规则**：编号 `04_`，固定放在 `audit/` 目录根部。
 
 ### 审查报告结构（`04_audit_report.md`）
 
@@ -172,41 +174,16 @@ papers/<project>/audit/04_audit_report.md           — 完整审查报告（主
 ## 需要立即修复的问题
 [按严重程度列出]
 
-## 建议修改
-[轻微问题，改善质量]
+## 建议改善
+[轻微问题]
 
 ## 详细检查记录
 [每条引用的验证细节]
 ```
 
-### Agent Guide 输出
-
-```json
-{
-  "completed": "integrity-auditor",
-  "artifacts": ["audit/04_audit_report.md", "audit/citation_verification.json"],
-  "context_written": ["audit_report"],
-  "summary": {
-    "citations_total": 42,
-    "citations_verified": 38,
-    "citations_unverified": 2,
-    "citations_suspicious": 1,
-    "citations_fabricated": 1,
-    "numerical_issues": 3,
-    "ai_writing_severity": "mild",
-    "traceability_score": "41/42"
-  },
-  "next_steps": [
-    {"skill": "paper-writer", "reason": "修复发现的问题后重新生成相关部分", "ready": true}
-  ],
-  "warnings": ["发现 1 条引用无法在任何数据库找到", "第 4 节有 3 处数字不一致"],
-  "mentor_note": "论文整体诚信状况良好。主要问题是 [引用X] 需要替换，以及结果部分有几处数字需要核对。AI 痕迹较轻，修正后不影响投稿。"
-}
-```
-
 ---
 
-## 主动引导逻辑
+## 完成后的标准输出
 
 ```
 ✅ 审查完成

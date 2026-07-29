@@ -85,19 +85,19 @@ else:
 from tests.skill_evals.harness import SkillEvalHarness
 
 harness = SkillEvalHarness()
-harness.load_prompts("tests/skill_evals/prompts/literature_survey.json")
+harness.load_prompts("tests/skill_evals/prompts/paper_search.json")
 
 # 评估已有 artifacts
 report = harness.evaluate_artifacts(
-    skill="literature-survey",
+    skill="paper-search",
     artifacts={
-        "literature_review": review_content,
+        "paper_search_report": review_content,
         "candidate_papers": papers_content,
     }
 )
 
 print(report.summary())
-# ✓ literature-survey: 100.0% pass rate (6/6 cases, 12ms)
+# ✓ paper-search: 100.0% pass rate (6/6 cases, 12ms)
 ```
 
 ### 3. 测试用例格式
@@ -106,13 +106,13 @@ print(report.summary())
 
 ```json
 {
-  "skill": "literature-survey",
+  "skill": "paper-search",
   "description": "文献搜索 skill 评估用例",
   "cases": [
     {
       "id": "lit_basic_chinese",
       "description": "中文主题基础搜索",
-      "skill": "literature-survey",
+      "skill": "paper-search",
       "prompt": "帮我搜索数字经济与就业的相关文献",
       "expected_checks": [
         "lit_has_papers",

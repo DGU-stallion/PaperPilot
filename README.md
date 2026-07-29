@@ -66,8 +66,9 @@ PaperPilot 不是一个等指令的工具。它会：
 ```
 [paperpilot]  ← 论文领航员：了解用户 + 诊断 + 编排 + 主动引导
    │
-   ├── topic-explorer        选题探索 (5W1H + 信息侦察 → 研究问题)
-   ├── literature-survey     文献调研 (PRISMA 式多源检索 → 综述 + .bib)
+   ├── topic-explorer        选题探索 (发散-收敛 → 研究计划书)
+   ├── paper-search          文献搜索 (锚点深搜 → 验证 → 清单 + .bib)
+   ├── literature-review     文献综述 (主题提炼 → 结构规划 → 成文)
    ├── data-collector        数据搜集 (数据源定位 → 清洗 → 面板验证)
    ├── empirical-analysis    实证分析 (FE/DID/IV/RDD + 稳健性, 可选)
    ├── paper-writer          论文写作 (结构规范 + LaTeX + AI痕迹检查)
@@ -109,7 +110,8 @@ paperpilot/
 ├── skills/                   # 技能包（核心内容）
 │   ├── AGENTS.md             #   paperpilot：用户画像 + 编排 + 搜索策略
 │   ├── topic-explorer/       #   选题探索
-│   ├── literature-survey/    #   文献调研
+│   ├── paper-search/         #   文献搜索
+│   ├── literature-review/    #   文献综述写作
 │   ├── data-collector/       #   数据搜集
 │   ├── empirical-analysis/   #   实证分析（可选）
 │   ├── paper-writer/         #   论文写作
