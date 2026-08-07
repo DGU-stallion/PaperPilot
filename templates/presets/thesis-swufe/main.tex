@@ -1,0 +1,47 @@
+% ============================================================
+% 西南财经大学硕士学位论文主文件
+% 编译: xelatex -> biber -> xelatex -> xelatex
+% ============================================================
+\documentclass{swufe-thesis}
+
+% ---- 论文元信息（按需修改）----
+\title{论文题目}
+\entitle{English Title}
+\author{学位申请人}
+\studentid{学号}
+\major{学科专业}
+\research{研究方向}
+\advisor{指导教师}
+\finishdate{20XX年X月}
+\classification{}
+\udc{}
+\secretlevel{}
+
+% ---- 参考文献数据库 ----
+\addbibresource{references.bib}
+
+\begin{document}
+
+% ===== 前置页面（格式固定）=====
+\maketitle                          % 扉页
+\makedeclaration                    % 原创性及知识产权声明
+\input{pages/abstract_zh.tex}       % 中文摘要
+\input{pages/abstract_en.tex}       % 英文摘要
+\tableofcontents                    % 目录
+
+% ===== 正文（由 paper-writer 根据论文类型动态生成）=====
+\mainmatter
+% \input{sections/01_xxx.tex}
+% \input{sections/02_xxx.tex}
+% ...
+
+% ===== 参考文献 =====
+\printbibliography[heading=bibintoc,title={参考文献}]
+
+% ===== 后置页面（格式固定）=====
+\backmatter
+\input{pages/postscript.tex}        % 后记
+\input{pages/acknowledgement.tex}   % 致谢
+\input{pages/publications.tex}      % 在读期间科研成果目录
+
+\end{document}

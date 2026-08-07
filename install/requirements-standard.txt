@@ -4,3 +4,6 @@ statsmodels==0.14.6
 linearmodels==7.0
 openpyxl==3.1.5
 pyarrow==24.0.0
+
+# PDF text extraction
+markitdown[pdf]>=0.1.6

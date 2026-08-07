@@ -3,7 +3,7 @@ name: topic-explorer
 description: Diverge-converge ideation — use when the user wants to explore a research direction, find a topic, brainstorm from a trigger, or crystallise a vague interest into a research proposal. Also use when another skill needs a research question and none exists yet.
 version: 10.0.0
 produces:
-  - topics/00_research_proposal.md
+  - topics/research_proposal.md
 output_dir: topics/
 ---
 
@@ -12,7 +12,7 @@ output_dir: topics/
 ## 职责边界
 
 **所需信息**：任意一个 trigger——新闻、数据、困惑、案例、感觉都算。  
-**产出**：`topics/00_research_proposal.md`（研究计划书，只在线稳定后写入）。  
+**产出**：`topics/research_proposal.md`（研究计划书，只在线稳定后写入）。  
 **完成标准**：用户能用一句话说清楚"我发现了什么，我想解释什么"，改一改还是同一根线。  
 **不做**：系统文献搜索（→ paper-search）；数据搜集（→ data-collector）——可做快速侦察（不落盘，≤2 轮，只给判断句）。
 
@@ -119,7 +119,7 @@ Agent 扮演**连接者**，主动在点之间找关联：
 明确不研究什么。
 ```
 
-**完成标准**：一、二、三节内容完整（背景/问题/through-line 是骨架，其余节可有"待补充"）；through-line 一句话测试通过；文件已写入 `papers/<project>/topics/00_research_proposal.md`。
+**完成标准**：一、二、三节内容完整（背景/问题/through-line 是骨架，其余节可有"待补充"）；through-line 一句话测试通过；文件已写入 `papers/<project>/topics/research_proposal.md`。
 
 ---
 

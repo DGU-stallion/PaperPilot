@@ -170,8 +170,8 @@ Q5（条件触发）: "目标期刊/学位论文有要求吗？"
 每个 skill 负责自己的信息收集——若所需信息不在已有文件中，skill 会向用户追问。调用前无需确认文件是否存在。
 
 **材料身份规则**（调用 skill 时保持一致）：
-- 同行评审学术文献 → `paper-search` 搜索验证，写入 `00_paper_search.md`；`literature-review` 综述写作，写入 `01_literature_review.md`
-- 年报、研报、新闻、行业数据等 → `data-collector` 管理，写入 `02_data_report.md`
+- 同行评审学术文献 → `paper-search` 搜索验证，写入 `paper_search.md`；`literature-review` 综述写作，写入 `literature_review.md`
+- 年报、研报、新闻、行业数据等 → `data-collector` 管理，写入 `data_report.md`
 
 ### skill 完成后的标准输出
 
@@ -197,7 +197,7 @@ Q5（条件触发）: "目标期刊/学位论文有要求吗？"
 
 ### 研究方案原地修订规范
 
-研究方案只有一个文件（`00_research_proposal.md`），原地修改，不创建版本副本。Git 负责版本历史。
+研究方案只有一个文件（`research_proposal.md`），原地修改，不创建版本副本。Git 负责版本历史。
 
 每次修订时，在文件顶部维护修订记录表：
 
@@ -242,9 +242,9 @@ Q5（条件触发）: "目标期刊/学位论文有要求吗？"
 
 | 所需信息 | 查找位置 |
 |---------|---------|
-| 研究问题和核心论点 | `00_research_proposal.md` 或用户提供 |
-| 文献基础和理论框架 | `01_literature_review.md` 或用户提供 |
-| 证据或实证结果 | `02_data_report.md` / `analysis/output/` 或用户提供 |
+| 研究问题和核心论点 | `research_proposal.md` 或用户提供 |
+| 文献基础和理论框架 | `literature_review.md` 或用户提供 |
+| 证据或实证结果 | `data_report.md` / `analysis/output/` 或用户提供 |
 
 信息缺失时询问用户是否补充，而不是阻止进入写作。
 
@@ -269,13 +269,13 @@ Q5（条件触发）: "目标期刊/学位论文有要求吗？"
 ## 路径约定
 
 ```
-papers/<project>/topics/     → 主输出: 00_research_proposal.md
-papers/<project>/literature/ → paper-search 产出: 00_paper_search.md
-                               literature-review 产出: 01_literature_review.md
-papers/<project>/data/       → 主输出: 02_data_report.md
-papers/<project>/analysis/   → 主输出: 03_analysis_report.md
+papers/<project>/topics/     → 主输出: research_proposal.md
+papers/<project>/literature/ → paper-search 产出: paper_search.md
+                               literature-review 产出: literature_review.md
+papers/<project>/data/       → 主输出: data_report.md
+papers/<project>/analysis/   → 主输出: analysis_report.md
 papers/<project>/paper/
-papers/<project>/audit/      → 主输出: 04_audit_report.md
+papers/<project>/audit/      → 主输出: audit_report.md
 
 papers/<project>/researcher_profile.json
 ```

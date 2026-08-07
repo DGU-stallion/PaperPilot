@@ -1,0 +1,19 @@
+{
+  "name": "empirical-zh",
+  "display_name": "中文社科实证论文（经济研究格式）",
+  "description": "适用于中文经济学/管理学实证研究论文，含计量模型设定、基准回归、稳健性检验、机制检验等章节结构",
+  "type": "journal",
+  "language": "zh",
+  "methodology": ["empirical", "econometrics"],
+  "sections": [
+    "01_introduction",
+    "02_literature",
+    "03_model",
+    "04_empirical_results",
+    "05_conclusion"
+  ],
+  "compiler": "xelatex",
+  "bib_tool": "biber",
+  "cls_file": "chinese-erj.cls",
+  "main_file": "main.tex"
+}

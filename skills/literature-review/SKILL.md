@@ -1,9 +1,9 @@
 ---
 name: literature-review
-description: Synthesis — use when the user wants to write a literature review section, identify themes and debates across papers, map research gaps, or organize existing papers into a coherent argument. Looks for paper list in 00_paper_search.md; accepts user-supplied reference list if absent.
+description: Synthesis — use when the user wants to write a literature review section, identify themes and debates across papers, map research gaps, or organize existing papers into a coherent argument. Looks for paper list in paper_search.md; accepts user-supplied reference list if absent.
 version: 1.0.0
 produces:
-  - literature/01_literature_review.md
+  - literature/literature_review.md
 output_dir: literature/
 ---
 
@@ -12,7 +12,7 @@ output_dir: literature/
 ## 职责边界
 
 **所需信息**：一份文献清单（带摘要/关键词）。  
-**产出**：`literature/01_literature_review.md`（成文综述，可直接用于论文）。  
+**产出**：`literature/literature_review.md`（成文综述，可直接用于论文）。  
 **完成标准**：综述按主题组织，覆盖趋势/争议/空白/核心论文四要素，每节末明确本研究的定位，无逐篇罗列。  
 **不做**：文献搜索和引用验证（→ paper-search）；数据搜集（→ data-collector）。
 
@@ -21,9 +21,9 @@ output_dir: literature/
 ## Step 1 — 收集所需信息
 
 查找顺序：
-1. 读取 `papers/<project>/literature/00_paper_search.md`（paper-search 的产出）
+1. 读取 `papers/<project>/literature/paper_search.md`（paper-search 的产出）
 2. 读取用户在对话中提供的文献列表（BibTeX、手写列表、PDF 目录均可）
-3. 读取 `papers/<project>/topics/00_research_proposal.md`，了解研究问题和理论框架
+3. 读取 `papers/<project>/topics/research_proposal.md`，了解研究问题和理论框架
 4. 仍无文献清单时，向用户追问："你有已收集好的文献列表吗？可以粘贴标题列表或上传 .bib 文件。"
 
 向用户确认综述范围：
@@ -139,7 +139,7 @@ output_dir: literature/
 
 ---
 
-## `01_literature_review.md` 结构
+## `literature_review.md` 结构
 
 ```markdown
 # 文献综述
@@ -170,7 +170,7 @@ output_dir: literature/
 - [ ] 五要素（趋势/主题/争议/里程碑/空白）均有体现
 - [ ] 每节末有本研究定位的关联说明
 - [ ] 结论有跨文献的综合判断，不是逐篇摘要，以本研究收尾
-- [ ] 所有引用来自 `00_paper_search.md` 或用户提供的清单（无新增未验证引用）
+- [ ] 所有引用来自 `paper_search.md` 或用户提供的清单（无新增未验证引用）
 - [ ] 无 AI 套话（"综上所述"、"值得注意的是"等）
 - [ ] 篇幅符合用户要求
 
@@ -181,7 +181,7 @@ output_dir: literature/
 ```
 ✅ 文献综述完成
 
-📄 literature/01_literature_review.md
+📄 literature/literature_review.md
   结构: [节数] 节
   覆盖文献: [N] 篇
   识别空白: [X] 个

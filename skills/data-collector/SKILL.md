@@ -1,9 +1,9 @@
 ---
 name: data-collector
-description: Evidence collection — use when the user wants to locate data sources, collect case evidence, validate data availability, clean datasets, or organize non-academic research materials. Looks for variable requirements and research object in 00_research_proposal.md; asks user if absent.
+description: Evidence collection — use when the user wants to locate data sources, collect case evidence, validate data availability, clean datasets, or organize non-academic research materials. Looks for variable requirements and research object in research_proposal.md; asks user if absent.
 version: 8.0.0
 produces:
-  - data/02_data_report.md
+  - data/data_report.md
 output_dir: data/
 ---
 
@@ -12,7 +12,7 @@ output_dir: data/
 ## 职责边界
 
 **所需信息**：需要什么变量/证据 + 研究对象 + 数据用途。  
-**产出**：`data/02_data_report.md`（证据来源报告）+ 原始数据文件（`data/raw/`）+ 清洗结果（`data/clean/`）。  
+**产出**：`data/data_report.md`（证据来源报告）+ 原始数据文件（`data/raw/`）+ 清洗结果（`data/clean/`）。  
 **完成标准**：研究计划书中每个子问题/因果链环节都有对应的可用证据/变量，来源已记录，关键数据 ≥2 源验证。  
 **不做**：联网操作执行细节（→ web-access）、回归分析（→ empirical-analysis）、学术文献搜集（→ paper-search）。
 
@@ -23,7 +23,7 @@ output_dir: data/
 ## Step 1 — 收集所需信息
 
 查找顺序：
-1. 读取 `papers/<project>/topics/00_research_proposal.md`，识别：研究类型、关键变量/证据需求、研究对象
+1. 读取 `papers/<project>/topics/research_proposal.md`，识别：研究类型、关键变量/证据需求、研究对象
 2. 读取对话中用户已提供的数据说明或已有材料
 3. 仍缺失时，向用户追问——一次只问一个问题：
    - "你要找什么数据/证据？用来验证什么？"
@@ -125,14 +125,14 @@ output_dir: data/
 data/raw/                    ← 原始数据（语义命名，如 nbs_provincial_2011_2023.xlsx）
 data/clean/panel_clean.csv   ← 清洗后数据
 data/scripts/01_clean.py     ← 清洗脚本
-data/02_data_report.md       ← 主输出
+data/data_report.md       ← 主输出
 ```
 
 **案例证据模式：**
 ```
 data/raw/                    ← 原始素材（语义命名，如 annual_report_2023.pdf）
 data/clean/                  ← 结构化数据
-data/02_data_report.md       ← 主输出（含事件时间线）
+data/data_report.md          ← 主输出（含事件时间线）
 ```
 
 ---
@@ -162,7 +162,7 @@ data/02_data_report.md       ← 主输出（含事件时间线）
 ```
 ✅ 数据搜集完成
 
-📄 data/02_data_report.md
+📄 data/data_report.md
   模式: [面板数据 / 案例证据 / 质性 / 资料汇编]
   原始文件: [N] 个（data/raw/）
   验证状态: ✓ [X] 条核心事实双源验证

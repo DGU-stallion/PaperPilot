@@ -3,7 +3,7 @@ name: integrity-auditor
 description: Integrity audit — use when the user wants to verify citations, check that numbers in the paper match analysis output, detect AI writing patterns, or audit data-to-paper traceability. Looks for paper file at paper/main.tex; asks user for path if absent.
 version: 7.0.0
 produces:
-  - audit/04_audit_report.md
+  - audit/audit_report.md
 output_dir: audit/
 ---
 
@@ -12,7 +12,7 @@ output_dir: audit/
 ## 职责边界
 
 **所需信息**：论文文件路径。  
-**产出**：`audit/04_audit_report.md` + `audit/citation_verification.json`。  
+**产出**：`audit/audit_report.md` + `audit/citation_verification.json`。  
 **完成标准**：所有引用有验证状态，数字一致性全部核查，AI写作模式已扫描全文。  
 **不做**：引用搜索执行（→ paper-search-mcp via web-access）、论文修改（→ paper-writer）。
 
@@ -154,16 +154,15 @@ Fallback（paper-search-mcp 不可用时）：
 
 ```
 papers/<project>/audit/citation_verification.json   — 每条引用的验证结果
-papers/<project>/audit/04_audit_report.md           — 完整审查报告（主输出）
+papers/<project>/audit/audit_report.md              — 完整审查报告（主输出）
 ```
 
-**命名规则**：编号 `04_`，固定放在 `audit/` 目录根部。
+**命名规则**：固定放在 `audit/` 目录根部。
 
-### 审查报告结构（`04_audit_report.md`）
+### 审查报告结构（`audit_report.md`）
 
 ```markdown
 # 学术诚信审查报告
-
 ## 概要
 - 引用总数: X 条
 - 验证结果: verified X / unverified X / suspicious X / fabricated X
@@ -188,7 +187,7 @@ papers/<project>/audit/04_audit_report.md           — 完整审查报告（主
 ```
 ✅ 审查完成
 
-📄 审查报告已生成: audit/04_audit_report.md
+📄 审查报告已生成: audit/audit_report.md
 
 📊 结果概要:
   - 引用: [38/42 验证通过] [1 条可疑] [1 条疑似不存在]

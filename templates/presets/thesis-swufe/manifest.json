@@ -1,0 +1,32 @@
+{
+  "name": "thesis-swufe",
+  "display_name": "西南财经大学硕士学位论文",
+  "description": "符合《西南财经大学关于研究生学位论文形式与格式的基本要求（2019年5月调整）》，提供格式壳和固定页面，正文结构由 paper-writer 动态生成",
+  "type": "thesis",
+  "language": "zh",
+  "compiler": "xelatex",
+  "bib_tool": "biber",
+  "cls_file": "swufe-thesis.cls",
+  "main_file": "main.tex",
+  "format_spec": {
+    "paper": "A4",
+    "font_body": "宋体小4号",
+    "line_spacing": "多倍行距1.37",
+    "margin": {"top": "3.9cm", "bottom": "3.4cm", "left": "3.45cm", "right": "3.45cm"},
+    "header": "2.8cm",
+    "footer": "2.5cm",
+    "heading_1": "2号小标宋",
+    "heading_2": "小3号黑体",
+    "heading_3": "小4号黑体",
+    "figure_table": "5号",
+    "table_caption": "黑体",
+    "table_note": "小5号宋体",
+    "header_footer_font": "宋体小5号"
+  },
+  "requirements": {
+    "word_count": "正文≥30000字（工学类≥25000字）",
+    "abstract_zh": "1000字左右",
+    "keywords": "3-8个",
+    "footnote_format": "脚注"
+  }
+}

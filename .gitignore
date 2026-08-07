@@ -72,9 +72,21 @@ current_project.json  # legacy, was in root
 papers/*/.cache/      # incremental execution hash cache
 
 # ========================
+# User custom templates (private, not tracked)
+# ========================
+templates/custom/*
+!templates/custom/README.md
+
+# ========================
 # Unfinished templates (local development)
 # ========================
-templates/paper/swufe-thesis.*
+templates/presets/*.draft/
+
+# ========================
+# LaTeX build artifacts (presets)
+# ========================
+templates/presets/**/*.aux
+templates/presets/**/*.pdf
 
 # ========================
 # Other MCP working directories
@@ -106,9 +118,6 @@ papers/*/paper/*.vrb
 # Compiled PDF (all projects - source of truth is local compile)
 papers/*/paper/main.pdf
 
-# Template LaTeX artifacts
-templates/paper/*.aux
-templates/paper/main.pdf
 
 # ========================
 # Archive (optional: archived projects not tracked in git)

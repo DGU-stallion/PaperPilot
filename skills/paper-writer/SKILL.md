@@ -1,6 +1,6 @@
 ---
 name: paper-writer
-description: Manuscript assembly — use when the user wants to write or revise any section of the paper, integrate upstream results into a draft, or produce a complete manuscript. Looks for research question and through-line in 00_research_proposal.md (sections 二/三), literature in 01_literature_review.md, and results in analysis/output/; asks user if any are absent.
+description: Manuscript assembly — use when the user wants to write or revise any section of the paper, integrate upstream results into a draft, or produce a complete manuscript. Looks for research question and through-line in research_proposal.md (sections 二/三), literature in literature_review.md, and results in analysis/output/; asks user if any are absent.
 version: 7.0.0
 produces:
   - paper/main.tex
@@ -22,8 +22,8 @@ output_dir: paper/
 
 查找顺序：
 
-1. **研究问题和框架**：读取 `papers/<project>/topics/00_research_proposal.md`（如存在）
-2. **文献综述**：读取 `papers/<project>/literature/01_literature_review.md`（如存在）
+1. **研究问题和框架**：读取 `papers/<project>/topics/research_proposal.md`（如存在）
+2. **文献综述**：读取 `papers/<project>/literature/literature_review.md`（如存在）
 3. **参考文献**：读取 `papers/<project>/literature/references.bib`（如存在）
 4. **实证结果**：读取 `papers/<project>/analysis/output/*.tex`（如存在）
 5. 上述文件缺失时，接受用户直接提供：
@@ -38,32 +38,85 @@ output_dir: paper/
 ```
 "所有素材已就绪。开始写论文前确认几点：
 
-  1. 论文类型: [期刊论文/学位论文/会议论文]
-  2. 目标期刊/要求: [如有]
-  3. 语言: [中文/英文]
-  4. 你想让我先写哪个部分？还是按顺序来？
-
-建议的写作顺序:
-  引言 → 文献综述 → 研究设计 → 实证结果 → 稳健性 → 结论 → 摘要（最后写）"
+  1. 目标: [硕士毕业论文 / 其他]
+  2. 学校格式要求: [已有模板 / 需要选择]
+  3. 你想让我先写哪个部分？还是按顺序来？"
 ```
 
-**完成标准**：论文类型、语言、写作起点已确认，素材已整理。
+**完成标准**：目标和素材已确认。
 
 ---
 
-## Step 2 — 加载论文结构模板
+## Step 2 — 加载论文模板
 
-根据确认的论文类型加载对应模板：
+### 2.1 加载写作指南
 
-| 类型 | Context pointer |
-|------|----------------|
-| 中文社科期刊 | `skills/paper-writer/templates/zh-journal.md` |
-| 英文经济学期刊 | `skills/paper-writer/templates/en-journal.md` |
-| 学位论文 | `skills/paper-writer/templates/thesis.md` |
+加载硕士学位论文写作指南：`skills/paper-writer/templates/thesis.md`
+
+### 2.2 选择 LaTeX 模板
+
+扫描 `templates/presets/` 和 `templates/custom/` 中的 `manifest.json`，根据论文类型、语言、方法论匹配候选模板，然后向用户展示选项：
+
+```
+"选择论文排版模板：
+
+  可用模板：
+  1. empirical-zh — 中文社科实证论文（经济研究格式）（推荐）
+  2. [其他匹配的模板...]
+  3. 不使用模板 — 我自己提供 / 后续在 Overleaf 排版
+  4. 上传自定义模板 — 把你的 .cls/.tex 文件放入 templates/custom/
+
+你想用哪个？"
+```
+
+用户选择后：
+- 选择内置/自定义模板 → 将模板文件复制到项目的 `paper/` 目录
+- 选择"不使用模板" → 只生成纯文本/Markdown 内容，用户自行排版
+- 选择"上传自定义" → 引导用户将文件放入 `templates/custom/<name>/`，创建 `manifest.json`
+
+**完成标准**：写作指南已加载，排版模板已确认或用户明确跳过。
 
 ---
 
-## Step 3 — 写作
+## Step 3 — 规划章节结构
+
+根据 `research_proposal.md`（如存在）和已有素材，确定正文的章节划分。
+
+### 规划依据
+
+- 研究类型（实证/案例/规范/混合）→ 参考 `thesis.md` 中的结构示例
+- 已有内容：文献综述是否独立成章、是否有多组实证等
+- 用户偏好：如用户已有想法，以用户为准
+
+### 执行流程
+
+1. 根据素材拟定章节大纲，向用户展示：
+
+```
+"根据你的研究计划，建议正文按以下章节组织：
+
+  第1章 导论
+  第2章 文献综述
+  第3章 理论框架与研究假设
+  第4章 研究设计
+  第5章 实证结果与分析
+  第6章 结论与政策建议
+
+确认后我会创建章节文件并开始写作。要调整吗？"
+```
+
+2. 用户确认后：
+   - 在 `paper/sections/` 下创建对应的 `.tex` 文件（空文件 + 章标题）
+   - 更新 `main.tex` 中 `\mainmatter` 后的 `\input{sections/...}` 列表
+   - 确保文件名与 `\input` 路径一致
+
+3. 如用户要求调整，修改后重复确认。
+
+**完成标准**：章节结构已确认，`sections/` 文件已创建，`main.tex` 已更新。
+
+---
+
+## Step 4 — 写作
 
 ### 各章节要点
 
@@ -74,7 +127,7 @@ output_dir: paper/
 - "本文的边际贡献在于..."
 
 **文献综述**
-- 从 `01_literature_review.md` 整合
+- 从 `literature_review.md` 整合
 - 按主题而非时间序列组织
 - 每段结尾点明与本文的关系
 - 明确指出"现有研究的不足在于..."
@@ -135,12 +188,7 @@ output_dir: paper/
 
 ```
 papers/<project>/paper/main.tex
-papers/<project>/paper/sections/01_introduction.tex
-papers/<project>/paper/sections/02_literature.tex
-papers/<project>/paper/sections/03_methodology.tex
-papers/<project>/paper/sections/04_results.tex
-papers/<project>/paper/sections/05_robustness.tex
-papers/<project>/paper/sections/06_conclusion.tex
+papers/<project>/paper/sections/*.tex（由 Step 3 规划确定）
 papers/<project>/paper/main.pdf（如 TeX Live 可用）
 ```
 
@@ -175,5 +223,5 @@ papers/<project>/paper/main.pdf（如 TeX Live 可用）
 1. 论文中每个数字必须追溯到 analysis/output/ 的实证结果
 2. 标记 placeholder 内容为 TODO（不用 AI 编造的数据填充）
 3. 引用只来自 references.bib
-4. 写作风格根据目标（中文期刊/英文期刊/学位论文）调整
+4. 写作风格根据论文类型和章节内容调整
 5. 不替用户做理论贡献的判断——呈现事实，让用户决定怎么定位

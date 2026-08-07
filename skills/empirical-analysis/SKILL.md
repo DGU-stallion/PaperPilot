@@ -1,9 +1,9 @@
 ---
 name: empirical-analysis
-description: Causal identification — use when the user wants to run regressions, choose an identification strategy, test parallel trends, run robustness checks, or interpret empirical results. Looks for research question and identification strategy in 00_research_proposal.md, data path in 02_data_report.md; asks user if either is absent.
+description: Causal identification — use when the user wants to run regressions, choose an identification strategy, test parallel trends, run robustness checks, or interpret empirical results. Looks for research question and identification strategy in research_proposal.md, data path in data_report.md; asks user if either is absent.
 version: 7.0.0
 produces:
-  - analysis/03_analysis_report.md
+  - analysis/analysis_report.md
 output_dir: analysis/
 optional: true
 ---
@@ -13,7 +13,7 @@ optional: true
 ## 职责边界
 
 **所需信息**：研究问题 + 识别策略 + 数据文件路径。  
-**产出**：`analysis/output/` 下的回归表格和图形 + `analysis/03_analysis_report.md`。  
+**产出**：`analysis/output/` 下的回归表格和图形 + `analysis/analysis_report.md`。  
 **完成标准**：基准回归完成，至少 3 种稳健性检验通过，关键识别假设有检验支撑（如平行趋势）。  
 **不做**：数据清洗（→ data-collector）、结果写入论文正文（→ paper-writer）。
 
@@ -23,8 +23,8 @@ optional: true
 
 查找顺序：
 
-1. **研究问题 + 识别策略**：读取 `papers/<project>/topics/00_research_proposal.md`（如存在）
-2. **数据文件路径**：读取 `papers/<project>/data/02_data_report.md`（如存在），或查找 `data/clean/` 下的数据文件
+1. **研究问题 + 识别策略**：读取 `papers/<project>/topics/research_proposal.md`（如存在）
+2. **数据文件路径**：读取 `papers/<project>/data/data_report.md`（如存在），或查找 `data/clean/` 下的数据文件
 3. 上述来源仍缺失时，接受用户直接提供：
    - 用户直接描述研究问题和识别策略
    - 用户指定数据文件路径（任意路径，不限于 `data/clean/`）
@@ -225,10 +225,10 @@ optional: true
 ```
 papers/<project>/analysis/output/      ← 表格和图（语义命名，如 baseline_regression.tex、fig_event_study.pdf）
 papers/<project>/analysis/scripts/     ← 可复现分析脚本（按步骤编号，如 01_descriptive.py）
-papers/<project>/analysis/03_analysis_report.md
+papers/<project>/analysis/analysis_report.md
 ```
 
-**命名规则**：每个项目只输出一个 md 文件，编号 `03_`，固定放在 `analysis/` 目录根部。`output/` 下的表格和图按语义命名，不使用数字前缀。
+**命名规则**：每个项目只输出一个 md 文件，固定放在 `analysis/` 目录根部。`output/` 下的表格和图按语义命名，不使用数字前缀。
 
 ---
 
