@@ -21,13 +21,13 @@ output_dir: audit/
 ## Step 1 — 收集所需信息
 
 查找顺序：
-1. 读取 `papers/<project>/paper/main.tex`（如存在）
+1. 读取 `./paper/main.tex`（如存在）
 2. 用户在对话中提供了其他路径或上传了论文文件
 3. 仍缺失时，向用户追问："论文文件在哪里？提供路径或上传文件即可。"
 
 同时检查以下文件（如存在则用于对照验证）：
-- `papers/<project>/literature/references.bib` — 引用核对
-- `papers/<project>/analysis/output/` — 数字一致性核对
+- `./literature/references.bib` — 引用核对
+- `./analysis/output/` — 数字一致性核对
 
 **完成标准**：论文文件已找到，告知用户将检查的维度和数量。
 
@@ -153,8 +153,8 @@ Fallback（paper-search-mcp 不可用时）：
 ## 输出
 
 ```
-papers/<project>/audit/citation_verification.json   — 每条引用的验证结果
-papers/<project>/audit/audit_report.md              — 完整审查报告（主输出）
+./audit/citation_verification.json   — 每条引用的验证结果
+./audit/audit_report.md              — 完整审查报告（主输出）
 ```
 
 **命名规则**：固定放在 `audit/` 目录根部。

@@ -268,16 +268,18 @@ Q5（条件触发）: "目标期刊/学位论文有要求吗？"
 
 ## 路径约定
 
-```
-papers/<project>/topics/     → 主输出: research_proposal.md
-papers/<project>/literature/ → paper-search 产出: paper_search.md
-                               literature-review 产出: literature_review.md
-papers/<project>/data/       → 主输出: data_report.md
-papers/<project>/analysis/   → 主输出: analysis_report.md
-papers/<project>/paper/
-papers/<project>/audit/      → 主输出: audit_report.md
+所有路径相对于用户的项目工作目录（即 Agent 启动时的 `cwd`）：
 
-papers/<project>/researcher_profile.json
+```
+./topics/          → 主输出: research_proposal.md
+./literature/      → paper-search 产出: paper_search.md
+                     literature-review 产出: literature_review.md
+./data/            → 主输出: data_report.md
+./analysis/        → 主输出: analysis_report.md
+./paper/
+./audit/           → 主输出: audit_report.md
+
+./researcher_profile.json
 ```
 
 ---

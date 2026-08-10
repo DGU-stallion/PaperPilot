@@ -1,0 +1,24 @@
+﻿variable,description
+province_en,省份 (英文)
+province,省份 (中文)
+year,年份
+region,区域代码
+tertiary_employment_share,第三产业就业占比
+urban_unit_employment,"城镇单位就业人员数 (万人, 缺失)"
+registered_unemployment_rate,"城镇登记失业率 (%, 缺失)"
+internet_penetration,互联网普及率 (每百人)
+mobile_phone_penetration,移动电话普及率 (每百人)
+telecom_business_volume,电信业务总量 (缺失)
+it_employment,信息传输/软件/IT服务业从业人员 (缺失)
+gdp_percapita,人均GDP (元)
+gdp_total,地区生产总值 (缺失)
+urbanization_rate,城镇化率
+fixed_capital_investment,固定资产投资
+fdi,实际使用外资 (缺失)
+export_share,出口占比
+government_expenditure,财政支出
+rd_expenditure,R&D经费 (缺失)
+education_expenditure,教育支出 (亿元)
+education_share,教育支出占比
+digital_finance_index,数字普惠金融指数 (PKU)
+digital_economy_index,数字经济综合指数

@@ -12,11 +12,13 @@ REPO_DIR="PaperPilot"
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 RED='\033[0;31m'
+BLUE='\033[0;34m'
 NC='\033[0m'
 
 info()  { echo -e "${GREEN}[✓]${NC} $1"; }
 warn()  { echo -e "${YELLOW}[!]${NC} $1"; }
 error() { echo -e "${RED}[✗]${NC} $1"; }
+step()  { echo -e "${BLUE}[→]${NC} $1"; }
 
 # --- 检测 Python ---
 detect_python() {
@@ -44,6 +46,7 @@ detect_python() {
 clone_or_update() {
     if [ -f "SKILL.md" ] && [ -d "skills/" ]; then
         info "当前目录已是 PaperPilot 仓库"
+        PAPERPILOT_DIR="$(pwd)"
         return
     fi
 
@@ -56,6 +59,7 @@ clone_or_update() {
         git clone "$REPO_URL" "$REPO_DIR"
         cd "$REPO_DIR"
     fi
+    PAPERPILOT_DIR="$(pwd)"
 }
 
 # --- 创建虚拟环境并安装 ---
@@ -67,7 +71,6 @@ setup_venv() {
         info "虚拟环境已存在"
     fi
 
-    # 激活虚拟环境
     source .venv/bin/activate 2>/dev/null || . .venv/bin/activate
 
     info "安装依赖（Standard 档位）..."
@@ -76,39 +79,91 @@ setup_venv() {
     info "依赖安装完成"
 }
 
+# --- 检测已安装的 Agent 并注册 skill ---
+register_skill() {
+    step "检测已安装的 AI 编程助手..."
+
+    REGISTERED=0
+
+    # 各 Agent 的 skills 目录（全局级）
+    # Claude Code
+    if [ -d "$HOME/.claude" ] || command -v claude &>/dev/null; then
+        mkdir -p "$HOME/.claude/skills/paperpilot"
+        ln -sf "$PAPERPILOT_DIR/SKILL.md" "$HOME/.claude/skills/paperpilot/SKILL.md"
+        info "Claude Code → ~/.claude/skills/paperpilot/ (symlink)"
+        REGISTERED=$((REGISTERED + 1))
+    fi
+
+    # Kiro
+    if [ -d "$HOME/.kiro" ] || command -v kiro &>/dev/null; then
+        mkdir -p "$HOME/.kiro/skills/paperpilot"
+        ln -sf "$PAPERPILOT_DIR/SKILL.md" "$HOME/.kiro/skills/paperpilot/SKILL.md"
+        info "Kiro → ~/.kiro/skills/paperpilot/ (symlink)"
+        REGISTERED=$((REGISTERED + 1))
+    fi
+
+    # Cursor
+    if [ -d "$HOME/.cursor" ] || [ -d "$HOME/Library/Application Support/Cursor" ]; then
+        mkdir -p "$HOME/.cursor/skills/paperpilot"
+        ln -sf "$PAPERPILOT_DIR/SKILL.md" "$HOME/.cursor/skills/paperpilot/SKILL.md"
+        info "Cursor → ~/.cursor/skills/paperpilot/ (symlink)"
+        REGISTERED=$((REGISTERED + 1))
+    fi
+
+    # Codex
+    if [ -d "$HOME/.codex" ] || command -v codex &>/dev/null; then
+        mkdir -p "$HOME/.codex/skills/paperpilot"
+        ln -sf "$PAPERPILOT_DIR/SKILL.md" "$HOME/.codex/skills/paperpilot/SKILL.md"
+        info "Codex → ~/.codex/skills/paperpilot/ (symlink)"
+        REGISTERED=$((REGISTERED + 1))
+    fi
+
+    # OpenCode
+    if [ -d "$HOME/.config/opencode" ] || command -v opencode &>/dev/null; then
+        mkdir -p "$HOME/.config/opencode/skill/paperpilot"
+        ln -sf "$PAPERPILOT_DIR/SKILL.md" "$HOME/.config/opencode/skill/paperpilot/SKILL.md"
+        info "OpenCode → ~/.config/opencode/skill/paperpilot/ (symlink)"
+        REGISTERED=$((REGISTERED + 1))
+    fi
+
+    if [ "$REGISTERED" -eq 0 ]; then
+        warn "未检测到已安装的 Agent。你可以手动注册："
+        echo "    mkdir -p ~/.claude/skills/paperpilot"
+        echo "    ln -s $PAPERPILOT_DIR/SKILL.md ~/.claude/skills/paperpilot/SKILL.md"
+    else
+        info "已注册到 $REGISTERED 个 Agent（通过 symlink，自动跟随仓库更新）"
+    fi
+}
+
 # --- 运行诊断 ---
 run_doctor() {
     info "运行环境诊断..."
     echo ""
-    .venv/bin/python install/bootstrap.py --check --profile standard
+    .venv/bin/python install/bootstrap.py --check --profile standard 2>/dev/null || warn "诊断脚本执行异常，跳过"
     echo ""
 }
 
 # --- 输出摘要 ---
 print_summary() {
     echo ""
-    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
     echo ""
     info "PaperPilot 安装完成！"
     echo ""
-    echo "  仓库路径: $(pwd)"
+    echo "  仓库路径: $PAPERPILOT_DIR"
     echo "  Python:   $PY_VERSION"
     echo "  档位:     Standard"
     echo ""
-    echo "━━━ 下一步 ━━━"
+    echo "━━━ 使用方式 ━━━"
     echo ""
-    echo "  将以下内容发送给你的 Coding Agent（Claude Code / Kiro / Cursor 等）："
+    echo "  1. 创建论文项目目录并进入"
+    echo "  2. 启动你的 AI 编程助手"
+    echo "  3. 输入 /paperpilot 或直接描述需求"
     echo ""
-    echo "  ┌──────────────────────────────────────────┐"
-    echo "  │ 我已安装 PaperPilot，请读取 CLAUDE.md。   │"
-    echo "  │                                          │"
-    echo "  │ 我想：                                    │"
-    echo "  │  1. 开始一篇新论文                        │"
-    echo "  │  2. 导入已有论文项目（路径: ...）          │"
-    echo "  │  3. 看一下 Demo 了解流程                  │"
-    echo "  └──────────────────────────────────────────┘"
+    echo "  PaperPilot 已注册为全局 skill，所有项目中均可使用。"
+    echo "  更新：cd $PAPERPILOT_DIR && git pull"
     echo ""
-    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 }
 
 # --- 主流程 ---
@@ -121,6 +176,7 @@ main() {
     detect_python
     clone_or_update
     setup_venv
+    register_skill
     run_doctor
     print_summary
 }

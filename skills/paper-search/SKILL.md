@@ -73,7 +73,7 @@ output_dir: literature/
 
 Sci-Hub 镜像顺序：`sci-hub.st` → `sci-hub.ru` → `sci-hub.se`。
 
-`save_path` = `"papers/<project>/literature/pdfs"`
+`save_path` = `"./literature/pdfs"`
 
 下载后验证：
 1. `file <路径>` — 必须含 `PDF document`

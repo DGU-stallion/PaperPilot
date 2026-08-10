@@ -119,7 +119,7 @@ Agent 扮演**连接者**，主动在点之间找关联：
 明确不研究什么。
 ```
 
-**完成标准**：一、二、三节内容完整（背景/问题/through-line 是骨架，其余节可有"待补充"）；through-line 一句话测试通过；文件已写入 `papers/<project>/topics/research_proposal.md`。
+**完成标准**：一、二、三节内容完整（背景/问题/through-line 是骨架，其余节可有"待补充"）；through-line 一句话测试通过；文件已写入 `./topics/research_proposal.md`。
 
 ---
 

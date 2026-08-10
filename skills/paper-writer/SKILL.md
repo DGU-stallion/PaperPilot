@@ -22,10 +22,10 @@ output_dir: paper/
 
 查找顺序：
 
-1. **研究问题和框架**：读取 `papers/<project>/topics/research_proposal.md`（如存在）
-2. **文献综述**：读取 `papers/<project>/literature/literature_review.md`（如存在）
-3. **参考文献**：读取 `papers/<project>/literature/references.bib`（如存在）
-4. **实证结果**：读取 `papers/<project>/analysis/output/*.tex`（如存在）
+1. **研究问题和框架**：读取 `./topics/research_proposal.md`（如存在）
+2. **文献综述**：读取 `./literature/literature_review.md`（如存在）
+3. **参考文献**：读取 `./literature/references.bib`（如存在）
+4. **实证结果**：读取 `./analysis/output/*.tex`（如存在）
 5. 上述文件缺失时，接受用户直接提供：
    - 用户描述研究问题、论点和主要发现
    - 用户提供已有草稿、笔记或其他形式的材料
@@ -187,9 +187,9 @@ output_dir: paper/
 ## 输出
 
 ```
-papers/<project>/paper/main.tex
-papers/<project>/paper/sections/*.tex（由 Step 3 规划确定）
-papers/<project>/paper/main.pdf（如 TeX Live 可用）
+./paper/main.tex
+./paper/sections/*.tex（由 Step 3 规划确定）
+./paper/main.pdf（如 TeX Live 可用）
 ```
 
 ---

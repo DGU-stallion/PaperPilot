@@ -23,7 +23,7 @@ output_dir: data/
 ## Step 1 — 收集所需信息
 
 查找顺序：
-1. 读取 `papers/<project>/topics/research_proposal.md`，识别：研究类型、关键变量/证据需求、研究对象
+1. 读取 `./topics/research_proposal.md`，识别：研究类型、关键变量/证据需求、研究对象
 2. 读取对话中用户已提供的数据说明或已有材料
 3. 仍缺失时，向用户追问——一次只问一个问题：
    - "你要找什么数据/证据？用来验证什么？"

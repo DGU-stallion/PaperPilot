@@ -1,0 +1,126 @@
+{
+  "data_source": "Figshare PONE-D-25-41664",
+  "provinces": 31,
+  "years": "2011-2023",
+  "expected_observations": 403,
+  "actual_observations": 403,
+  "variables": {
+    "tertiary_employment_share": {
+      "cn_name": "第三产业就业占比",
+      "status": "ok",
+      "source": "Figshare",
+      "note": "来源: 中国统计年鉴"
+    },
+    "urban_unit_employment": {
+      "cn_name": "城镇单位就业人员数",
+      "status": "missing",
+      "source": "N/A",
+      "note": "Figshare 数据不含此项，需从《中国劳动统计年鉴》获取"
+    },
+    "registered_unemployment_rate": {
+      "cn_name": "城镇登记失业率",
+      "status": "missing",
+      "source": "N/A",
+      "note": "Figshare 数据不含此项，需从《中国统计年鉴》获取"
+    },
+    "internet_penetration": {
+      "cn_name": "互联网普及率",
+      "status": "ok",
+      "source": "Figshare",
+      "note": "来源: 中国统计年鉴 / CNNIC"
+    },
+    "mobile_phone_penetration": {
+      "cn_name": "移动电话普及率",
+      "status": "ok",
+      "source": "Figshare",
+      "note": "来源: 中国统计年鉴"
+    },
+    "telecom_business_volume": {
+      "cn_name": "电信业务总量",
+      "status": "missing",
+      "source": "N/A",
+      "note": "Figshare 数据不含此项，需从工信部或统计年鉴获取"
+    },
+    "it_employment": {
+      "cn_name": "信息传输/软件/IT服务业从业人员",
+      "status": "missing",
+      "source": "N/A",
+      "note": "可从 macrodatas.cn 获取 (需会员) 或从统计年鉴手动整理"
+    },
+    "gdp_percapita": {
+      "cn_name": "人均GDP",
+      "status": "ok",
+      "source": "Figshare",
+      "note": "来源: 中国统计年鉴"
+    },
+    "gdp_total": {
+      "cn_name": "地区生产总值(GDP)",
+      "status": "missing",
+      "source": "N/A",
+      "note": "Figshare 有人均GDP但无总量，需人口数据换算"
+    },
+    "urbanization_rate": {
+      "cn_name": "城镇化率",
+      "status": "ok",
+      "source": "Figshare",
+      "note": "来源: 中国统计年鉴"
+    },
+    "fixed_capital_investment": {
+      "cn_name": "固定资产投资",
+      "status": "ok",
+      "source": "Figshare",
+      "note": "变量名 FCI (Fixed Capital Investment)"
+    },
+    "fdi": {
+      "cn_name": "实际使用外资/FDI",
+      "status": "missing",
+      "source": "N/A",
+      "note": "Figshare 仅有 exports 和 export_share，无 FDI"
+    },
+    "export_share": {
+      "cn_name": "出口占比(贸易开放度)",
+      "status": "ok",
+      "source": "Figshare",
+      "note": "可作为 FDI 的弱替代变量"
+    },
+    "government_expenditure": {
+      "cn_name": "财政支出",
+      "status": "ok",
+      "source": "Figshare",
+      "note": "来源: 中国统计年鉴"
+    },
+    "rd_expenditure": {
+      "cn_name": "R&D经费",
+      "status": "missing",
+      "source": "N/A",
+      "note": "Figshare 数据不含此项"
+    },
+    "education_expenditure": {
+      "cn_name": "教育支出",
+      "status": "ok",
+      "source": "Figshare",
+      "note": "来源: 中国统计年鉴"
+    },
+    "digital_finance_index": {
+      "cn_name": "数字普惠金融指数(PKU)",
+      "status": "ok",
+      "source": "Figshare",
+      "note": "来源: 北京大学数字金融研究中心"
+    },
+    "digital_economy_index": {
+      "cn_name": "数字经济综合指数",
+      "status": "ok",
+      "source": "Figshare",
+      "note": "作者构建的 DE 指数"
+    }
+  },
+  "recommendations": [
+    "1. 城镇单位就业人员数: 从《中国劳动统计年鉴》或《中国人口和就业统计年鉴》手动整理",
+    "2. 城镇登记失业率: 从 zldatas.com 或国家统计局数据库下载",
+    "3. 电信业务总量: 从工信部通信业统计公报或《中国统计年鉴》整理",
+    "4. IT从业人员: 从 macrodatas.cn (需会员) 或《中国第三产业统计年鉴》整理",
+    "5. GDP总量: 用人口数据 * 人均GDP 估算, 或从统计年鉴直接获取",
+    "6. 实际使用外资: 从商务部数据中心 (data.mofcom.gov.cn) 获取",
+    "7. R&D经费: 从《中国科技统计年鉴》或《中国统计年鉴》整理"
+  ]
+}

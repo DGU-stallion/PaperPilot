@@ -21,9 +21,9 @@ output_dir: literature/
 ## Step 1 — 收集所需信息
 
 查找顺序：
-1. 读取 `papers/<project>/literature/paper_search.md`（paper-search 的产出）
+1. 读取 `./literature/paper_search.md`（paper-search 的产出）
 2. 读取用户在对话中提供的文献列表（BibTeX、手写列表、PDF 目录均可）
-3. 读取 `papers/<project>/topics/research_proposal.md`，了解研究问题和理论框架
+3. 读取 `./topics/research_proposal.md`，了解研究问题和理论框架
 4. 仍无文献清单时，向用户追问："你有已收集好的文献列表吗？可以粘贴标题列表或上传 .bib 文件。"
 
 向用户确认综述范围：

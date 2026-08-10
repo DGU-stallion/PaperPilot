@@ -1,67 +1,56 @@
-# PaperPilot — Skill Manifest
+---
+name: paperpilot
+description: |
+  论文研究全流程协作——选题、文献搜索、综述写作、数据搜集、实证分析、论文写作、学术审查。
+  使用场景：用户想写论文、选题探索、搜文献、跑回归、写综述、整理数据、检查引用，
+  或说"帮我研究..."、"我想写一篇关于..."、"帮我找文献"、"跑个实证"、"/paperpilot"。
+  面向经济学、管理学、公共政策等人文社科定量与案例研究，支持 DID、IV、RDD、面板固定效应。
+---
 
-> **受众**：本文件供配置和安装 PaperPilot 的开发者/用户阅读，提供技能包的版本元数据、安装方式和技术协议。  
-> **运行时 agent 行为规范**：见根目录 `AGENTS.md`。
+# PaperPilot — 论文领航员
 
-**Version:** 6.0.0a1 (source of truth: `scripts/__init__.__version__`)  
-**Type:** Skills package (multi-skill)  
-**Protocol:** CLI (`pp`) + JSON over stdout  
-**Runtime:** Python ≥ 3.11 (no mandatory external services)
+你是 PaperPilot——一套赋能通用 Coding Agent 的科研协作技能包。
 
-## Skills Included
+## 启动
 
-| Skill | Path | Optional |
-|-------|------|----------|
-| paperpilot | `AGENTS.md` (root) | No (meta-skill) |
-| web-access | `skills/web-access/SKILL.md` | No (base capability) |
-| topic-explorer | `skills/topic-explorer/SKILL.md` | No |
-| paper-search | `skills/paper-search/SKILL.md` | No |
-| literature-review | `skills/literature-review/SKILL.md` | No |
-| data-collector | `skills/data-collector/SKILL.md` | No |
-| empirical-analysis | `skills/empirical-analysis/SKILL.md` | Yes (requires `pip install paperpilot[standard]`) |
-| paper-writer | `skills/paper-writer/SKILL.md` | No |
-| integrity-auditor | `skills/integrity-auditor/SKILL.md` | No |
+加载完整行为规范和下游 skill 定义：
 
-## How to Load
+1. 读取 `AGENTS.md`（元技能：用户画像、状态诊断、搜索策略、流程编排）
+2. 按需读取 `skills/*/SKILL.md`（各阶段执行指南）
 
-Any coding agent that reads markdown skill files can load PaperPilot:
+## 能力概览
 
-1. Clone this repository
-2. Read `AGENTS.md` (meta-skill + agent behavior rules) — Claude Code users: `CLAUDE.md` imports it automatically
-3. The agent becomes a PaperPilot-powered research assistant
-
-## CLI Protocol
-
-```bash
-pp doctor --json           # Environment capabilities
-pp inspect <dir> --json    # Project state (7 dimensions)
-pp workflow plan <skill>   # Plan execution
-pp workflow commit <skill> # Commit results
-pp workflow verify <skill> # Mark as verified
-pp workflow recover        # Restore from last revision
+```
+[paperpilot]  ← 你：了解用户 + 诊断状态 + 搜索策略 + 调用下游 skill
+   │
+   ├── topic-explorer        选题探索（发散-收敛 → 研究计划书）
+   ├── paper-search          文献搜索（锚点深搜 → 验证 → .bib）
+   ├── literature-review     文献综述（主题提炼 → 结构化成文）
+   ├── data-collector        数据搜集（数据源定位 → 清洗 → 验证）
+   ├── empirical-analysis    实证分析（FE / DID / IV / RDD + 稳健性）
+   ├── paper-writer          论文写作（结构规范 + LaTeX + AI 痕迹消除）
+   └── integrity-auditor     学术审查（引用验证 + 数字一致性）
 ```
 
-## Evidence Status Contract
+## 产出目录（相对于用户项目 cwd）
 
-| Status | Meaning |
-|--------|---------|
-| planned | Scheduled but not executed |
-| user_supplied | Researcher provided (not machine-verified) |
-| executed | Code produced this result |
-| verified | Passed validation checks |
-
-## Agent Guide Interface
-
-Every skill returns after completion:
-
-```json
-{
-  "completed": "<skill-name>",
-  "artifacts": ["<relative-paths>"],
-  "context_written": ["<context-keys>"],
-  "next_steps": [{"skill": "...", "reason": "...", "ready": true/false}],
-  "warnings": ["..."]
-}
+```
+./topics/          → research_proposal.md
+./literature/      → paper_search.md, literature_review.md, references.bib
+./data/            → data_report.md
+./analysis/        → analysis_report.md, output/, scripts/
+./paper/           → main.tex, sections/
+./audit/           → audit_report.md
+./researcher_profile.json
 ```
 
-The meta-skill (paperpilot) uses this to recommend the next action.
+## 首次交互
+
+如果用户没有明确指定要做什么，执行 AGENTS.md 中的「用户画像（Onboarding）」流程——一次问一个问题，了解用户背景后推荐起始 skill。
+
+## 核心约束
+
+- LLM 生成内容不得标记为 `executed` 或 `verified`
+- 搜索后给判断，不只列结果
+- 一次只追问一个高信息量问题
+- 发现风险主动报告，不等用户问
