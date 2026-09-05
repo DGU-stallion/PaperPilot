@@ -30,20 +30,16 @@ class AgentGuideTests(unittest.TestCase):
             artifacts=[],
         )
         skill_names = [s["skill"] for s in guide["next_steps"]]
-        self.assertIn("literature-survey", skill_names)
+        self.assertIn("paper-search", skill_names)
+        self.assertNotIn("empirical-analysis", skill_names)
 
-    def test_guide_marks_optional_skill_readiness(self):
+    def test_guide_all_core_skills_ready(self):
         guide = get_agent_guide(
             completed_skill="data-collector",
-            artifacts=["data/clean/panel.csv"],
+            artifacts=["data/data_report.md"],
         )
         for step in guide["next_steps"]:
-            if step["skill"] == "empirical-analysis":
-                # Should have ready=True if linearmodels is installed, or ready=False with hint
-                self.assertIn("ready", step)
-                if not step["ready"]:
-                    self.assertIn("install_hint", step)
-                break
+            self.assertTrue(step.get("ready", True))
 
     def test_guide_with_project_dir_uses_state(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -75,7 +71,7 @@ class AgentGuideTests(unittest.TestCase):
             self.assertGreater(len(guide["next_steps"]), 0)
             # Research question is done, so next should be literature or data
             first_skill = guide["next_steps"][0]["skill"]
-            self.assertIn(first_skill, ["literature-survey", "data-collector"])
+            self.assertIn(first_skill, ["paper-search", "literature-survey", "literature-review", "data-collector"])
 
     def test_guide_limits_to_3_recommendations(self):
         guide = get_agent_guide(

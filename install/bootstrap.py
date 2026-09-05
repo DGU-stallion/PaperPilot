@@ -16,7 +16,7 @@ from pathlib import Path
 from typing import Any
 
 ROOT = Path(__file__).resolve().parent.parent
-ANALYSIS_PACKAGES = ("numpy", "pandas", "statsmodels", "linearmodels")
+ANALYSIS_PACKAGES = ("numpy", "pandas")
 DATA_PACKAGES = ("openpyxl", "pyarrow")
 
 
@@ -134,7 +134,7 @@ def build_report(profile: str) -> dict[str, Any]:
         "analysis": _capability(
             analysis_available,
             analysis_required,
-            "实证分析环境已就绪" if analysis_available else "缺少实证分析依赖",
+            "数据分析环境已就绪" if analysis_available else "缺少基础数据处理依赖",
             packages=analysis_packages,
         ),
         "data_formats": _capability(

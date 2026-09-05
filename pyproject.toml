@@ -10,15 +10,13 @@ readme = "README.md"
 requires-python = ">=3.11"
 license = "MIT"
 authors = [{name = "DGU-stallion"}]
-keywords = ["research", "academic", "agent-skills", "paper-writing", "literature-review", "econometrics"]
+keywords = ["research", "academic", "agent-skills", "paper-writing", "literature-review", "case-study"]
 dependencies = []
 
 [project.optional-dependencies]
 standard = [
   "numpy==2.4.6",
   "pandas==3.0.3",
-  "statsmodels==0.14.6",
-  "linearmodels==7.0",
   "openpyxl==3.1.5",
   "pyarrow==24.0.0",
 ]

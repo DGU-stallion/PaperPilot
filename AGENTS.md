@@ -80,7 +80,7 @@ Q5（条件触发）: "目标期刊/学位论文有要求吗？"
 |------|------|---------|---------|
 | 新手探索型 | 无论文经验，无/模糊方向 | topic-explorer | 详细解释每步为什么 |
 | 有方向缺方法 | 有经验，有方向但未确定方法 | topic-explorer | 给选项让用户决策 |
-| 执行推进型 | 有经验，方法明确，需要推进 | data-collector 或 empirical-analysis | 简洁，给建议不啰嗦 |
+| 执行推进型 | 有经验，方法明确，需要推进 | data-collector | 简洁，给建议不啰嗦 |
 | 写作完善型 | 有结果，在写或改论文 | paper-writer 或 integrity-auditor | 聚焦写作质量 |
 
 ### 输出
@@ -153,7 +153,7 @@ Q5（条件触发）: "目标期刊/学位论文有要求吗？"
 
 ## 下游技能
 
-六个子 skill 是独立工具，按用户当前需求调用，无固定顺序：
+五个子 skill 是独立工具，按用户当前需求调用，无固定顺序：
 
 ```
 [paperpilot] ─── 画像 + 诊断 + 搜索策略 + 调用
@@ -161,8 +161,7 @@ Q5（条件触发）: "目标期刊/学位论文有要求吗？"
    ├──▶ [topic-explorer]        发散-收敛选题 → 研究计划书
    ├──▶ [paper-search]          学术文献搜索与验证
    ├──▶ [literature-review]     文献综述写作
-   ├──▶ [data-collector]        证据与数据搜集
-   ├──▶ [empirical-analysis]    实证分析
+   ├──▶ [data-collector]        案例证据与资料搜集
    ├──▶ [paper-writer]          论文写作
    └──▶ [integrity-auditor]     审查
 ```
@@ -188,6 +187,19 @@ Q5（条件触发）: "目标期刊/学位论文有要求吗？"
 
 你的想法？
 ```
+
+---
+
+## 学术底座协同（ARS-agy 联动机制）
+
+PaperPilot 专注于**案例研究方法论、多源证据三角验证与学位论文全流程引导**。在涉及通用学术深度任务时，协同调用已安装的通用学术底座 **`academic-research-skills` (ARS-agy)**：
+
+| 任务场景 | 协同调用的 ARS-agy 技能 | 协同机制 |
+| :--- | :--- | :--- |
+| **深度系统文献回顾** | `deep-research` | 采用 PRISMA 规范构建跨主题文献矩阵，识别前沿理论缺口 |
+| **高标准学术段落写作** | `academic-paper` | 构建论点-证据映射链（Argument Map），剔除 AI 写作高频套话与生硬转折 |
+| **预答辩/盲审残酷挑刺** | `academic-paper-reviewer` | 调度 **魔鬼代言人（Devil's Advocate）** 针对案例典型性、代表性不足、外部效度局限进行严格质询与压力测试 |
+| **学术诚信与防幻觉审核** | `academic-pipeline` (Integrity Gate) | 逐条核验引用的真实性，拦截 Lu (2026) 7 类科研缺陷与虚构引用 |
 
 ---
 
@@ -244,7 +256,7 @@ Q5（条件触发）: "目标期刊/学位论文有要求吗？"
 |---------|---------|
 | 研究问题和核心论点 | `research_proposal.md` 或用户提供 |
 | 文献基础和理论框架 | `literature_review.md` 或用户提供 |
-| 证据或实证结果 | `data_report.md` / `analysis/output/` 或用户提供 |
+| 证据或案例素材 | `data_report.md` 或用户提供 |
 
 信息缺失时询问用户是否补充，而不是阻止进入写作。
 
@@ -301,7 +313,6 @@ Q5（条件触发）: "目标期刊/学位论文有要求吗？"
 |------|------|------|
 | paper-search-mcp | 学术文献搜索降为通用搜索 | web-access 通过 WebSearch 访问学术平台网页版 |
 | CDP (Node.js <22) | 无法访问需登录/反爬站点 | 标记为"需用户手动"，提供具体步骤 |
-| 实证依赖 | empirical-analysis 降为引导模式 | 推荐安装或用户手动提供结果 |
 | TeX Live | paper-writer 不编译 PDF | 引导使用 Overleaf |
 
 ---
@@ -313,8 +324,7 @@ Q5（条件触发）: "目标期刊/学位论文有要求吗？"
 | 选题与 through-line | `skills/topic-explorer/SKILL.md` |
 | 学术文献搜索 | `skills/paper-search/SKILL.md` |
 | 文献综述写作 | `skills/literature-review/SKILL.md` |
-| 数据搜集 | `skills/data-collector/SKILL.md` |
-| 实证分析 | `skills/empirical-analysis/SKILL.md` |
+| 案例证据搜集 | `skills/data-collector/SKILL.md` |
 | 论文写作 | `skills/paper-writer/SKILL.md` |
 | 学术审查 | `skills/integrity-auditor/SKILL.md` |
 | 联网与数据获取 | `skills/web-access/SKILL.md` |
@@ -324,9 +334,6 @@ Q5（条件触发）: "目标期刊/学位论文有要求吗？"
 ## 可选依赖
 
 ```bash
-pip install paperpilot[standard]   # 基础实证 (FE + DID)
-pip install diff-diff               # 高级因果推断 (Staggered DID / Synthetic DID)
-pip install statspai                # 完整因果推断 (IV / RDD / SC / Double ML)
 pip install paper-search-mcp       # 学术文献搜索 MCP
 ```
 

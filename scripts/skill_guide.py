@@ -15,9 +15,9 @@ from scripts.paper_state import scan_project
 # Skill ordering for recommendations
 SKILL_ORDER = [
     "topic-explorer",
-    "literature-survey",
+    "paper-search",
+    "literature-review",
     "data-collector",
-    "empirical-analysis",
     "paper-writer",
     "integrity-auditor",
 ]
@@ -25,20 +25,15 @@ SKILL_ORDER = [
 # Map skill → dimension in paper_state scanner
 SKILL_TO_DIMENSION = {
     "topic-explorer": "research_question",
-    "literature-survey": "literature",
+    "paper-search": "literature",
+    "literature-review": "literature",
     "data-collector": "data",
-    "empirical-analysis": "analysis",
     "paper-writer": "writing",
     "integrity-auditor": "reproducibility",
 }
 
 # Skills that require optional dependencies
-OPTIONAL_SKILLS = {
-    "empirical-analysis": {
-        "check": "linearmodels",
-        "install_hint": "pip install paperpilot[standard]",
-    },
-}
+OPTIONAL_SKILLS: dict[str, dict[str, str]] = {}
 
 
 def _is_skill_ready(skill_name: str) -> bool:

@@ -1,6 +1,6 @@
 # PaperPilot
 
-> 安装到你的 AI 编程助手后，它立即具备经济学论文全流程研究能力——从选题发散、文献搜索、案例分析、实证回归到论文排版。面向人文社科（尤其是经济学、管理学、公共政策）的定量与案例研究，支持 DID、IV、RDD、面板固定效应等因果识别策略。
+> 安装到你的 AI 编程助手后，它立即具备学术论文全流程研究能力——从选题发散、文献搜索、案例分析到论文排版。面向人文社科（经济学、管理学、公共政策等）的案例研究与学术论文写作。
 
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 [![Python](https://img.shields.io/badge/Python-3.11%2B-blue)](https://www.python.org/)
@@ -94,10 +94,9 @@ my-paper/
    ├── topic-explorer        选题探索（发散-收敛 → 研究计划书）
    ├── paper-search          文献搜索（锚点深搜 → 验证 → 清单 + .bib）
    ├── literature-review     文献综述（主题提炼 → 结构规划 → 成文）
-   ├── data-collector        数据搜集（数据源定位 → 清洗 → 面板验证）
-   ├── empirical-analysis    实证分析（FE / DID / IV / RDD + 稳健性检验）
-   ├── paper-writer          论文写作（结构规范 + LaTeX + AI 痕迹消除）
-   └── integrity-auditor     学术审查（引用验证 + 数字一致性 + 可追溯性）
+   ├── data-collector        案例证据搜集（多源交叉验证 + 事件时间线）
+   ├── paper-writer          论文写作（学位论文结构 + 规范排版 + AI 痕迹消除）
+   └── integrity-auditor     学术审查（引用验证 + 论据事实一致性）
 ```
 
 各 Skill 之间没有固定顺序，按用户当前需求调用。每个 Skill 完成后返回产出评价、下一步建议和风险提示。
@@ -108,13 +107,12 @@ my-paper/
 
 | Skill | 做什么 | 产出 |
 |-------|--------|------|
-| topic-explorer | 从模糊兴趣出发，通过发散-收敛对话确定选题、研究问题、识别策略 | `research_proposal.md` |
+| topic-explorer | 从模糊兴趣出发，通过发散-收敛对话确定选题、研究问题、Through-line | `research_proposal.md` |
 | paper-search | 基于锚点论文向外扩展搜索，验证每条引用真实性，构建参考文献清单 | `paper_search.md` + `.bib` |
 | literature-review | 从文献清单中提炼主题、识别争论和空白，写出结构化综述 | `literature_review.md` |
-| data-collector | 定位数据源、评估可得性、清洗数据、验证面板结构 | `data_report.md` + 清洗数据 |
-| empirical-analysis | 执行回归分析、稳健性检验、异质性分析，生成可复现脚本 | `analysis_report.md` + 表格/图 |
-| paper-writer | 按目标期刊格式组装论文，检查 AI 写作痕迹，编译 PDF | `main.tex` + PDF |
-| integrity-auditor | 逐条验证引用、核对正文数字与实证输出一致性 | `audit_report.md` |
+| data-collector | 定位案例材料（年报/公告/研报/政策）、评估可得性、多源三角验证、构建时间线 | `data_report.md` + 案例素材 |
+| paper-writer | 按目标期刊或高校学位论文格式组装论文，检查 AI 写作痕迹，编译 PDF | `main.tex` + PDF |
+| integrity-auditor | 逐条验证引用、核对正文事实与案例证据一致性 | `audit_report.md` |
 
 ---
 
@@ -141,7 +139,6 @@ PaperPilot/
 │   ├── paper-search/
 │   ├── literature-review/
 │   ├── data-collector/
-│   ├── empirical-analysis/
 │   ├── paper-writer/
 │   ├── integrity-auditor/
 │   └── web-access/
