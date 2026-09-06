@@ -1,6 +1,6 @@
 # PaperPilot Agent 安装契约
 
-本文档供 Claude Code、Codex、Kiro、Cursor、OpenCode 等 Coding Agent 执行。用户不应被要求手动完成 Agent 可以安全完成的命令。
+本文档供 Google Antigravity (AGY) 及各类 Coding Agent 执行。用户不应被要求手动完成 Agent 可以安全完成的命令。
 
 ## 安全边界
 
@@ -78,27 +78,27 @@ pip show paper-search-mcp 2>/dev/null && echo "已安装" || echo "未安装"
 pip install paper-search-mcp
 ```
 
-MCP 配置（根据用户的 Agent 平台选择对应格式）：
-
-Kiro（`.kiro/settings/mcp.json`）：
+Antigravity (AGY)（项目根目录 `.mcp.json` 或 `~/.gemini/config/mcp_config.json`）：
 ```json
 {
   "mcpServers": {
-    "paper-search": {
-      "command": "python",
-      "args": ["-m", "paper_search_mcp.server"],
-      "env": {
-        "SCHOLAR_SEARCH_ENABLE_SEMANTIC_SCHOLAR": "true",
-        "SCHOLAR_SEARCH_ENABLE_ARXIV": "true"
-      },
-      "disabled": false,
-      "autoApprove": []
+    "paper-search-mcp": {
+      "type": "stdio",
+      "command": "uv",
+      "args": [
+        "run",
+        "--with",
+        "paper-search-mcp",
+        "python",
+        "-m",
+        "paper_search_mcp.server"
+      ]
     }
   }
 }
 ```
 
-Claude Code：
+通用 / Claude Code：
 ```bash
 claude mcp add paper-search -- python -m paper_search_mcp.server
 ```

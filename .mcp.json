@@ -11,14 +11,6 @@
         "-m",
         "paper_search_mcp.server"
       ]
-    },
-    "stata-mcp": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "mcp-stata"
-      ],
-      "env": {}
     }
   }
 }

@@ -86,6 +86,14 @@ register_skill() {
     REGISTERED=0
 
     # 各 Agent 的 skills 目录（全局级）
+    # Antigravity (AGY)
+    if [ -d "$HOME/.gemini" ] || command -v agy &>/dev/null; then
+        mkdir -p "$HOME/.gemini/config/skills/paperpilot"
+        ln -sf "$PAPERPILOT_DIR/SKILL.md" "$HOME/.gemini/config/skills/paperpilot/SKILL.md"
+        info "Antigravity (AGY) → ~/.gemini/config/skills/paperpilot/ (symlink)"
+        REGISTERED=$((REGISTERED + 1))
+    fi
+
     # Claude Code
     if [ -d "$HOME/.claude" ] || command -v claude &>/dev/null; then
         mkdir -p "$HOME/.claude/skills/paperpilot"

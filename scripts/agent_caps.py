@@ -16,12 +16,12 @@ from scripts.shared.paths import PAPERS_DIR
 from scripts.shared.state import get_current_project, load as load_state
 from scripts.workflow import atomic_save
 
-KNOWN_AGENTS = {"claude-code", "codex", "kiro", "cursor", "opencode", "generic"}
+KNOWN_AGENTS = {"antigravity", "agy", "claude-code", "codex", "kiro", "cursor", "opencode", "generic"}
 
 DEFAULT_CAPS: dict[str, Any] = {
-    "agent_type": "generic",
-    "web_search": False,
-    "mcp_servers": [],
+    "agent_type": "antigravity",
+    "web_search": True,
+    "mcp_servers": ["paper-search-mcp"],
     "file_edit": True,
     "shell_exec": True,
     "texlive": False,
@@ -39,12 +39,7 @@ def detect_local_capabilities() -> dict[str, Any]:
 
 def _has_analysis_backend() -> bool:
     try:
-        import linearmodels  # noqa: F401
-        return True
-    except ImportError:
-        pass
-    try:
-        import statsmodels  # noqa: F401
+        import pandas  # noqa: F401
         return True
     except ImportError:
         return False

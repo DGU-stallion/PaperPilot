@@ -116,9 +116,11 @@ def build_report(profile: str) -> dict[str, Any]:
 
     detected_agents = [
         name
-        for name in ("kiro-cli", "claude", "codex", "cursor", "opencode")
+        for name in ("agy", "claude", "cursor", "codex", "opencode")
         if _command_available(name)
     ]
+    if (Path.home() / ".gemini").is_dir() and "agy" not in detected_agents:
+        detected_agents.append("agy")
 
     analysis_required = profile in {"standard", "full"}
     latex_required = profile == "full"

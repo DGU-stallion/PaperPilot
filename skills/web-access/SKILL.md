@@ -81,14 +81,13 @@ node "skills/web-access/scripts/check-deps.mjs"
 
 ### 多平台工具映射
 
-| 能力 | Kiro | Claude Code | Cursor / 其他 |
-|------|------|-------------|--------------|
-| WebSearch | `remote_web_search` / `mcp_tavily_tavily_search` | WebSearch | 内置搜索 |
-| WebFetch | `web_fetch` (4种模式) | WebFetch | 内置 fetch |
-| 文件下载 | `execute_bash` + `curl -L -o` | bash + curl | terminal + curl |
-| 学术搜索 | `mcp_paper_search_*` | paper-search-mcp | paper-search-mcp |
-| 高级搜索/提取 | `mcp_tavily_tavily_search/extract/crawl` | tavily | tavily |
-| 浏览器CDP | `execute_bash` + CDP Proxy API | CDP Proxy API | CDP Proxy API |
+| 能力 | Antigravity (AGY) | 通用/其他 Agent |
+|------|-------------------|----------------|
+| WebSearch | `search_web` | WebSearch / 内置搜索 |
+| WebFetch | `read_url_content` | WebFetch / 内置 fetch |
+| 文件下载 | `run_command` (`curl -L -o`) | bash + curl |
+| 学术搜索 | `paper-search-mcp` / `literature-search-openalex` | paper-search-mcp |
+| 浏览器自动化 | `read_browser_page` | CDP Proxy API |
 
 ### 场景→通道决策
 
